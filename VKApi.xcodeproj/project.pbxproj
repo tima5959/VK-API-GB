@@ -84,6 +84,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		B57AF11024E864F700D8D7F7 /* AuthorizesModules */ = {
+			isa = PBXGroup;
+			children = (
+				B5B69AFC24CC85A600E9B552 /* ViewController.swift */,
+				B52EE8DD24E5C5E500176EAA /* VKLoginController.swift */,
+			);
+			path = AuthorizesModules;
+			sourceTree = "<group>";
+		};
 		B5B69AEC24CC85A600E9B552 = {
 			isa = PBXGroup;
 			children = (
@@ -116,8 +125,7 @@
 		B5DAC13524CDE7A00081C6E2 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				B5B69AFC24CC85A600E9B552 /* ViewController.swift */,
-				B52EE8DD24E5C5E500176EAA /* VKLoginController.swift */,
+				B57AF11024E864F700D8D7F7 /* AuthorizesModules */,
 				B5FC403524D44C5900B56697 /* NewsModules */,
 				B5DAC13B24CDE87F0081C6E2 /* FriendsModules */,
 				B5DAC14224CDE8FA0081C6E2 /* GroupsModules */,
