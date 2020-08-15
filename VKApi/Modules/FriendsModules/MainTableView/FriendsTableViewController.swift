@@ -12,6 +12,7 @@ class FriendsTableViewController: UITableViewController {
     
     // Значение nil, говорит что результаты поиска будут отображены на самом Контроллере
     // Если мы хотим показывать результаты на другом контроллере, то вместо nil нужно установить другой контроллер
+    let network = NetworkService()
     let searchController = UISearchController(searchResultsController: nil)
     
     private let cellIdentifire = "cell"
@@ -31,6 +32,8 @@ class FriendsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+       
+        
         
         self.navigationItem.rightBarButtonItem = self.editButtonItem
         
@@ -51,6 +54,15 @@ class FriendsTableViewController: UITableViewController {
         
         // 5 Значение truе гарантирует, что панель поиска не останется на экране, если пользователь переходит к другому вьюКонтроллеру, пока активен UISearchController.
         definesPresentationContext = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+               
+               network.getLoadFriends()
+       //        network.sendRequest()
+       //        network.load()
     }
     
     @IBAction func addFriend(_ sender: UIBarButtonItem) {
@@ -147,6 +159,7 @@ class FriendsTableViewController: UITableViewController {
         let friend = users[indexPath.row]
         let friendsDetailVC = segue.destination as! FriendsDetailCollectionViewController
         friendsDetailVC.navigationController?.title = friend
+        friendsDetailVC.ownerID = ""
         friendsDetailVC.users.append(friend)
     }
     

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="HSJ-F1-Ufk">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -140,7 +140,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="140" y="98"/>
+            <point key="canvasLocation" x="68" y="-330"/>
         </scene>
         <!--Groups-->
         <scene sceneID="ehw-tS-72h">
@@ -301,6 +301,41 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o6T-xO-wg0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1926" y="475"/>
+        </scene>
+        <!--Login Controller-->
+        <scene sceneID="LwC-ZC-fAI">
+            <objects>
+                <viewController id="HSJ-F1-Ufk" customClass="VKLoginController" customModule="VKApi" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Nad-pi-aRJ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dYt-j1-knU">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="0Nt-Vt-aNU" firstAttribute="bottom" secondItem="dYt-j1-knU" secondAttribute="bottom" id="6AU-sa-70b"/>
+                            <constraint firstItem="dYt-j1-knU" firstAttribute="leading" secondItem="0Nt-Vt-aNU" secondAttribute="leading" id="A7a-TY-tT5"/>
+                            <constraint firstItem="dYt-j1-knU" firstAttribute="top" secondItem="0Nt-Vt-aNU" secondAttribute="top" id="twk-Sz-D78"/>
+                            <constraint firstItem="0Nt-Vt-aNU" firstAttribute="trailing" secondItem="dYt-j1-knU" secondAttribute="trailing" id="zfh-nH-gNj"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="0Nt-Vt-aNU"/>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="dYt-j1-knU" id="C4D-Bm-Fhe"/>
+                        <segue destination="nZQ-yI-diZ" kind="show" identifier="webViewOAuth" id="wDG-IM-p1Q"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eTt-lT-gru" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="68" y="474.51274362818594"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="zww-A2-AUy">
@@ -559,8 +594,8 @@
                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="3sC-00-QnO">
                                             <rect key="frame" x="24" y="19" width="271" height="67"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photollllll" translatesAutoresizingMaskIntoConstraints="NO" id="5bI-F3-6CR">
-                                                    <rect key="frame" x="0.0" y="0.0" width="75" height="67"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="5bI-F3-6CR">
+                                                    <rect key="frame" x="0.0" y="1" width="75" height="64.5"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
@@ -594,20 +629,6 @@
                                         <constraint firstItem="3sC-00-QnO" firstAttribute="top" secondItem="G3m-tg-DXC" secondAttribute="topMargin" constant="8" id="u2P-mQ-pMK"/>
                                     </constraints>
                                 </tableViewCellContentView>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
-                                        <real key="value" value="8"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
-                                        <real key="value" value="8"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
-                                        <color key="value" cocoaTouchSystemColor="darkTextColor"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="size" keyPath="shadowOffset">
-                                        <size key="value" width="4" height="6"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <outlet property="avatarImageView" destination="5bI-F3-6CR" id="Kw3-Je-V3W"/>
                                     <outlet property="nameLabel" destination="t08-tz-5ih" id="eab-KF-xO2"/>
@@ -723,6 +744,9 @@
             <point key="canvasLocation" x="1926" y="-328"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="wDG-IM-p1Q"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <image name="arrowshape.turn.up.right" catalog="system" width="128" height="106"/>
         <image name="camera.circle.fill" catalog="system" width="128" height="121"/>
@@ -732,8 +756,8 @@
         <image name="heart" catalog="system" width="128" height="109"/>
         <image name="person.2" catalog="system" width="128" height="81"/>
         <image name="person.3" catalog="system" width="128" height="62"/>
+        <image name="photo" catalog="system" width="128" height="93"/>
         <image name="photo.fill" catalog="system" width="128" height="93"/>
-        <image name="photollllll" width="3024" height="4032"/>
         <image name="uiwindow.split.2x1" catalog="system" width="128" height="93"/>
     </resources>
 </document>

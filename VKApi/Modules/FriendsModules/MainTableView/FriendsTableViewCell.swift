@@ -12,7 +12,7 @@ class FriendsTableViewCell: UITableViewCell {
     
     @IBOutlet weak var avatarImageView: UIImageView! {
         didSet {
-            setShadowForImageView(avatarImageView)
+//            setShadowForImageView(avatarImageView)
         }
     }
     

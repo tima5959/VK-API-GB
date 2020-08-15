@@ -28,6 +28,7 @@ class GroupesTableViewController: UITableViewController {
         super.viewDidLoad()
         
         
+        
         let refreshControll = UIRefreshControl()
         refreshControll.addTarget(self,
                                   action: #selector(refreshFunc),
@@ -54,6 +55,13 @@ class GroupesTableViewController: UITableViewController {
         
         // 5 Значение truе гарантирует, что панель поиска не останется на экране, если пользователь переходит к другому вьюКонтроллеру, пока активен UISearchController.
         definesPresentationContext = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let network = NetworkService()
+        network.getLoadGroups()
     }
     
     // MARK: - Table view data source
@@ -132,8 +140,12 @@ extension GroupesTableViewController: UISearchResultsUpdating {
     }
     
     
-    // filterContentFor(_ searchText: String) фильтрует пользователей на основе searchText и помещает результаты в фильтр filteredUsers
+    // filterContentFor(_ searchText: String) фильтрует группы на основе searchText и помещает результаты в фильтр filteredGroups
     func filterContentFor(_ searchText: String) {
+        if searchText.isEmpty == false {
+            let searchGroupRequest = NetworkService.shared.getFindGroups(title: searchText)
+            print(searchGroupRequest)
+        }
         filteredGroups = groups.filter { users -> Bool in
             return users.lowercased().contains(searchText.lowercased())
         }

@@ -13,12 +13,12 @@ private let reuseIdentifier = "friendsCollectionItem"
 class FriendsDetailCollectionViewController: UICollectionViewController {
     
     var users: [String] = ["", "", "", "", ""]
+    var ownerID = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Register cell classes
-        //        self.collectionView!.register(FriendsDetailCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        NetworkService.shared.getPhotos(Session.shared.userId)
         
 //        collectionView.isPagingEnabled = true
     }

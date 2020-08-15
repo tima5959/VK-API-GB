@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B52EE8DC24E5C3BE00176EAA /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52EE8DB24E5C3BE00176EAA /* Session.swift */; };
+		B52EE8DE24E5C5E500176EAA /* VKLoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52EE8DD24E5C5E500176EAA /* VKLoginController.swift */; };
+		B52EE8E124E5D8E200176EAA /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52EE8E024E5D8E200176EAA /* NetworkService.swift */; };
+		B52EE8E424E5E29E00176EAA /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B52EE8E324E5E29E00176EAA /* WebKit.framework */; };
 		B53FB72D24CF5CDA0009977E /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53FB72C24CF5CDA0009977E /* Extension.swift */; };
 		B5B69AF924CC85A600E9B552 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B69AF824CC85A600E9B552 /* AppDelegate.swift */; };
 		B5B69AFB24CC85A600E9B552 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B69AFA24CC85A600E9B552 /* SceneDelegate.swift */; };
@@ -27,6 +31,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B52EE8DB24E5C3BE00176EAA /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		B52EE8DD24E5C5E500176EAA /* VKLoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKLoginController.swift; sourceTree = "<group>"; };
+		B52EE8E024E5D8E200176EAA /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		B52EE8E324E5E29E00176EAA /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		B53FB72C24CF5CDA0009977E /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		B5B69AF524CC85A600E9B552 /* VKApi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VKApi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5B69AF824CC85A600E9B552 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -53,17 +61,35 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B52EE8E424E5E29E00176EAA /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B52EE8DF24E5D8B000176EAA /* NetworkServices */ = {
+			isa = PBXGroup;
+			children = (
+				B52EE8E024E5D8E200176EAA /* NetworkService.swift */,
+			);
+			path = NetworkServices;
+			sourceTree = "<group>";
+		};
+		B52EE8E224E5E29E00176EAA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B52EE8E324E5E29E00176EAA /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		B5B69AEC24CC85A600E9B552 = {
 			isa = PBXGroup;
 			children = (
 				B5B69AF724CC85A600E9B552 /* VKApi */,
 				B5B69AF624CC85A600E9B552 /* Products */,
+				B52EE8E224E5E29E00176EAA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -78,8 +104,9 @@
 		B5B69AF724CC85A600E9B552 /* VKApi */ = {
 			isa = PBXGroup;
 			children = (
-				B5DAC13624CDE7D20081C6E2 /* Helpers */,
 				B5FC403E24D44FF400B56697 /* Main.storyboard */,
+				B5DAC13624CDE7D20081C6E2 /* Helpers */,
+				B52EE8DF24E5D8B000176EAA /* NetworkServices */,
 				B5DAC13524CDE7A00081C6E2 /* Modules */,
 				B5B69B0624CC85A700E9B552 /* Info.plist */,
 			);
@@ -90,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				B5B69AFC24CC85A600E9B552 /* ViewController.swift */,
+				B52EE8DD24E5C5E500176EAA /* VKLoginController.swift */,
 				B5FC403524D44C5900B56697 /* NewsModules */,
 				B5DAC13B24CDE87F0081C6E2 /* FriendsModules */,
 				B5DAC14224CDE8FA0081C6E2 /* GroupsModules */,
@@ -104,6 +132,7 @@
 				B5B69AFA24CC85A600E9B552 /* SceneDelegate.swift */,
 				B5B69B0124CC85A700E9B552 /* Assets.xcassets */,
 				B5B69B0324CC85A700E9B552 /* LaunchScreen.storyboard */,
+				B52EE8DB24E5C3BE00176EAA /* Session.swift */,
 				B53FB72C24CF5CDA0009977E /* Extension.swift */,
 			);
 			path = Helpers;
@@ -243,11 +272,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B52EE8DE24E5C5E500176EAA /* VKLoginController.swift in Sources */,
 				B5DAC14824CDE9810081C6E2 /* GroupesTableViewCell.swift in Sources */,
 				B5DAC14C24CDE99B0081C6E2 /* DetailTableViewController.swift in Sources */,
 				B5FC403924D44CBB00B56697 /* NewsTableViewCell.swift in Sources */,
 				B5B69AFD24CC85A600E9B552 /* ViewController.swift in Sources */,
+				B52EE8E124E5D8E200176EAA /* NetworkService.swift in Sources */,
 				B53FB72D24CF5CDA0009977E /* Extension.swift in Sources */,
+				B52EE8DC24E5C3BE00176EAA /* Session.swift in Sources */,
 				B5B69AF924CC85A600E9B552 /* AppDelegate.swift in Sources */,
 				B5DAC13824CDE83B0081C6E2 /* FriendsTableViewController.swift in Sources */,
 				B5DAC14124CDE8F00081C6E2 /* FriendsDetailCollectionViewCell.swift in Sources */,
