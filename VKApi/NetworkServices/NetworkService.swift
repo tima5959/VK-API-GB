@@ -11,9 +11,6 @@ import Foundation
 final class NetworkService {
     static let shared = NetworkService()
     
-    private let session = Session()
-    private let userID = Session.shared.userId
-    private let token = Session.shared.token
     private var urlComponents = URLComponents()
     private let scheme = "https"
     private let version = "5.122"
@@ -43,10 +40,10 @@ final class NetworkService {
         urlComponents.host = vkApiHost
         urlComponents.path = "/method/friends.get"
         urlComponents.queryItems = [
-            URLQueryItem(name: "user_ids", value: "\(userID)"),
+            URLQueryItem(name: "user_ids", value: "\(Session.shared.userID)"),
             URLQueryItem(name: "order", value: "hints"),
             URLQueryItem(name: "fields", value: "nickname, domain, sex, bdate, city, country, timezone, online, last_seen"),
-            URLQueryItem(name: "access_token", value: token),
+            URLQueryItem(name: "access_token", value: Session.shared.token),
             URLQueryItem(name: "v", value: version)
         ]
         
@@ -68,11 +65,11 @@ final class NetworkService {
         urlComponents.host = vkApiHost
         urlComponents.path = "/method/groups.get"
         urlComponents.queryItems = [
-            URLQueryItem(name: "user_ids", value: "\(userID)"),
+            URLQueryItem(name: "user_ids", value: "\(Session.shared.userID)"),
             URLQueryItem(name: "extended", value: "1"),
             URLQueryItem(name: "filter", value: "admin, editor, moder, advertiser, groups, publics, events, hasAddress"),
             URLQueryItem(name: "fields", value: "city, country, place, description, members_count, counters, status, contacts, verified"),
-            URLQueryItem(name: "access_token", value: token),
+            URLQueryItem(name: "access_token", value: Session.shared.token),
             URLQueryItem(name: "v", value: version)
         ]
         
@@ -110,15 +107,16 @@ final class NetworkService {
     }
     
     func getPhotos(_ ownerID: Int?) {
-        guard let owner = ownerID else { return }
+        guard let owners = ownerID else { return }
         urlComponents.scheme = scheme
         urlComponents.host = vkApiHost
-        urlComponents.path = "/method/photos.get"
+        urlComponents.path = "/method/photos.getAll"
         urlComponents.queryItems = [
-            URLQueryItem(name: "user_ids", value: "\(userID)"),
-            URLQueryItem(name: "owner_id", value: String(owner)),
+            URLQueryItem(name: "user_ids", value: "\(Session.shared.userID)"),
+            URLQueryItem(name: "owner_id", value: String(owners)),
             URLQueryItem(name: "extended", value: "1"),
             URLQueryItem(name: "photo_sizes", value: "1"),
+            URLQueryItem(name: "access_token", value: Session.shared.token),
             URLQueryItem(name: "v", value: version),
         ]
         guard let url = urlComponents.url else { return }

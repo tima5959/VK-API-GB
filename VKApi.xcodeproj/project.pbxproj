@@ -136,11 +136,11 @@
 		B5DAC13624CDE7D20081C6E2 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				B52EE8DB24E5C3BE00176EAA /* Session.swift */,
 				B5B69AF824CC85A600E9B552 /* AppDelegate.swift */,
 				B5B69AFA24CC85A600E9B552 /* SceneDelegate.swift */,
 				B5B69B0124CC85A700E9B552 /* Assets.xcassets */,
 				B5B69B0324CC85A700E9B552 /* LaunchScreen.storyboard */,
-				B52EE8DB24E5C3BE00176EAA /* Session.swift */,
 				B53FB72C24CF5CDA0009977E /* Extension.swift */,
 			);
 			path = Helpers;
