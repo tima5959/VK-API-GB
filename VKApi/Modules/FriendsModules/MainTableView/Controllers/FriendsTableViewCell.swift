@@ -43,4 +43,7 @@ class FriendsTableViewCell: UITableViewCell {
         }
     }
     
+    public func configure(with friends: Friend) {
+        nameLabel.text = friends.firstName + " " + friends.lastName
+    }
 }

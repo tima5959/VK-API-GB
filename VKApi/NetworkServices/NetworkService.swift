@@ -11,6 +11,9 @@ import Foundation
 final class NetworkService {
     static let shared = NetworkService()
     
+    private let session = URLSession(configuration: .default)
+    
+    private let userID = Session.shared.userId
     private var urlComponents = URLComponents()
     private let scheme = "https"
     private let version = "5.122"
@@ -22,12 +25,12 @@ final class NetworkService {
         urlComponents.host = autorizeHost
         urlComponents.path = "/authorize"
         urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: "7566637"),
-            URLQueryItem(name: "display", value: "mobile"),
-            URLQueryItem(name: "redirect_uri", value: "https://oauth.vk.com/blank.html"),
-            URLQueryItem(name: "scope", value: "262150"),
-            URLQueryItem(name: "response_type", value: "token"),
-            URLQueryItem(name: "v", value: version)
+            .init(name: "client_id", value: "7566637"),
+            .init(name: "display", value: "mobile"),
+            .init(name: "redirect_uri", value: "https://oauth.vk.com/blank.html"),
+            .init(name: "scope", value: "262150"),
+            .init(name: "response_type", value: "token"),
+            .init(name: "v", value: version)
         ]
         guard let url = urlComponents.url else { preconditionFailure( "URL was bady formatted") }
         var request = URLRequest(url: url)
@@ -35,28 +38,38 @@ final class NetworkService {
         return request
     }
     
-    func getLoadFriends() {
+    func getLoadFriends(handler: @escaping ([Friend]) -> Void) {
         urlComponents.scheme = scheme
         urlComponents.host = vkApiHost
         urlComponents.path = "/method/friends.get"
         urlComponents.queryItems = [
-            URLQueryItem(name: "user_ids", value: "\(Session.shared.userID)"),
-            URLQueryItem(name: "order", value: "hints"),
-            URLQueryItem(name: "fields", value: "nickname, domain, sex, bdate, city, country, timezone, online, last_seen"),
-            URLQueryItem(name: "access_token", value: Session.shared.token),
-            URLQueryItem(name: "v", value: version)
+            .init(name: "user_ids", value: "\(userID)"),
+            .init(name: "order", value: "hints"),
+            .init(name: "fields", value: "sex, bdate, city, country, photo_100, photo_200_orig"),
+//            .init(name: "count", value: "1"),
+            .init(name: "access_token", value: Session.shared.token),
+            .init(name: "v", value: version)
         ]
-        
         guard let url = urlComponents.url else { preconditionFailure("loadFriends network methods is failure") }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        let session = URLSession(configuration: .default)
-        
-        let task = session.dataTask(with: request) { data, response, error in
-            let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-            print(json ?? "")
-        }
-        task.resume()
+        session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            guard let data = data else { return }
+            do {
+                let friendsModelData = try? JSONDecoder().decode(Response<Friend>.self, from: data).response.items
+                dump(friendsModelData)
+                guard let data = friendsModelData else { return }
+                DispatchQueue.main.async {
+                    handler(data)
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }.resume()
     }
     
     func getLoadGroups() {
@@ -65,23 +78,32 @@ final class NetworkService {
         urlComponents.host = vkApiHost
         urlComponents.path = "/method/groups.get"
         urlComponents.queryItems = [
-            URLQueryItem(name: "user_ids", value: "\(Session.shared.userID)"),
-            URLQueryItem(name: "extended", value: "1"),
-            URLQueryItem(name: "filter", value: "admin, editor, moder, advertiser, groups, publics, events, hasAddress"),
-            URLQueryItem(name: "fields", value: "city, country, place, description, members_count, counters, status, contacts, verified"),
-            URLQueryItem(name: "access_token", value: Session.shared.token),
-            URLQueryItem(name: "v", value: version)
+            .init(name: "user_ids", value: "\(userID)"),
+            .init(name: "extended", value: "1"),
+//            .init(name: "fields", value: "description"),
+            .init(name: "count", value: "1"),
+            .init(name: "access_token", value: Session.shared.token),
+            .init(name: "v", value: version)
         ]
         
         guard let url = urlComponents.url else { preconditionFailure("loadGroups network methods is failure") }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        let session = URLSession(configuration: .default)
-        let task = session.dataTask(with: request) { data, response, error in
-            let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-            print(json ?? "")
-        }
-        task.resume()
+        
+        session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+            
+            guard let data = data else { return }
+            do {
+                let groupsModelData = try JSONDecoder().decode(Response<Groups>.self, from: data).response.items
+                dump(groupsModelData)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }.resume()
+        
     }
     
     func getFindGroups(title forFind: String) {
@@ -89,21 +111,20 @@ final class NetworkService {
         urlComponents.host = vkApiHost
         urlComponents.path = "/method/groups.search"
         urlComponents.queryItems = [
-            URLQueryItem(name: "q", value: "\(forFind)"),
-            URLQueryItem(name: "sort", value: "0"),
-            URLQueryItem(name: "access_token", value: "\(Session.shared.token)"),
-            URLQueryItem(name: "v", value: version)
+            .init(name: "q", value: "\(forFind)"),
+            .init(name: "sort", value: "0"),
+            .init(name: "access_token", value: "\(Session.shared.token)"),
+            .init(name: "v", value: version)
         ]
         
         guard let url = urlComponents.url else { preconditionFailure("findGroups network methods is failure") }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        let session = URLSession(configuration: .default)
-        let task = session.dataTask(with: request) { data, response, error in
+        
+        session.dataTask(with: request) { data, response, error in
             let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments)
             print(json ?? "")
-        }
-        task.resume()
+        }.resume()
     }
     
     func getPhotos(_ ownerID: Int?) {
@@ -112,22 +133,20 @@ final class NetworkService {
         urlComponents.host = vkApiHost
         urlComponents.path = "/method/photos.getAll"
         urlComponents.queryItems = [
-            URLQueryItem(name: "user_ids", value: "\(Session.shared.userID)"),
-            URLQueryItem(name: "owner_id", value: String(owners)),
-            URLQueryItem(name: "extended", value: "1"),
-            URLQueryItem(name: "photo_sizes", value: "1"),
-            URLQueryItem(name: "access_token", value: Session.shared.token),
-            URLQueryItem(name: "v", value: version),
+            .init(name: "user_ids", value: "\(userID)"),
+            .init(name: "owner_id", value: String(owners)),
+            .init(name: "extended", value: "1"),
+            .init(name: "photo_sizes", value: "1"),
+            .init(name: "access_token", value: Session.shared.token),
+            .init(name: "v", value: version),
         ]
         guard let url = urlComponents.url else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        let session = URLSession(configuration: .default)
-        let task = session.dataTask(with: request) { data, response, error in
+        session.dataTask(with: request) { data, response, error in
             let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments)
             print(json ?? "")
-        }
-        task.resume()
+        }.resume()
     }
     
 }

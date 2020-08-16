@@ -12,7 +12,7 @@ private let reuseIdentifier = "friendsCollectionItem"
 
 class FriendsDetailCollectionViewController: UICollectionViewController {
     
-    var users: [String] = ["", "", "", "", ""]
+    var users: [Friend] = []
     var ownerID = ""
     
     override func viewDidLoad() {

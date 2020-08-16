@@ -12,27 +12,18 @@ class FriendsTableViewController: UITableViewController {
     
     // Значение nil, говорит что результаты поиска будут отображены на самом Контроллере
     // Если мы хотим показывать результаты на другом контроллере, то вместо nil нужно установить другой контроллер
-    let network = NetworkService()
-    let searchController = UISearchController(searchResultsController: nil)
+    private let network = NetworkService()
+    private var model = [Friend]()
+    private let searchController = UISearchController(searchResultsController: nil)
     
     private let cellIdentifire = "cell"
     private let segueIdentifire = "detailFriendsTableViewSegue"
-    var users: [String] = [
-        "Шибалкина Юлия",
-        "Ратников Потап",
-        "Скуратова Софья",
-        "Адаксин Тарас",
-        "Касатый Раиса",
-        "Уржумцева Оксана",
-        "Ключникова Анастасия",
-        "Рябцев Виссарион"
-    ]
     
-    var filteredUsers: [String] = []
+    var filteredUsers: [Friend] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        
         
         
         self.navigationItem.rightBarButtonItem = self.editButtonItem
@@ -59,10 +50,13 @@ class FriendsTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-               
-               network.getLoadFriends()
-       //        network.sendRequest()
-       //        network.load()
+        network.getLoadFriends(handler: { [weak self] data in
+            self?.model = data
+            
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        })
     }
     
     @IBAction func addFriend(_ sender: UIBarButtonItem) {
@@ -75,27 +69,27 @@ class FriendsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isFiltering {
-          return filteredUsers.count
+            return filteredUsers.count
         }
-          
-        return users.count
+        
+        return model.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! FriendsTableViewCell
         
-//        let candy: User
-//        if isFiltering {
-//          user = filteredUsers[indexPath.row]
-//        } else {
-//          user = users[indexPath.row]
-//        }
-//        cell.textLabel?.text = user.name
-//        cell.detailTextLabel?.text = user.birth
-//        return cell
+        //        let candy: User
+        //        if isFiltering {
+        //          user = filteredUsers[indexPath.row]
+        //        } else {
+        //          user = users[indexPath.row]
+        //        }
+        //        cell.textLabel?.text = user.name
+        //        cell.detailTextLabel?.text = user.birth
+        //        return cell
         
-        let user = users[indexPath.row]
-        cell.nameLabel.text = user
+        let user = model[indexPath.row]
+        cell.configure(with: user)
         
         return cell
     }
@@ -112,8 +106,8 @@ class FriendsTableViewController: UITableViewController {
         
         var letters: [Character]
         
-        letters = users.map { (surname) -> Character in
-            return surname[surname.startIndex]
+        letters = model.map { (surname) -> Character in
+            return surname.firstName[surname.firstName.startIndex]
         }
         
         letters = letters.sorted()
@@ -137,7 +131,7 @@ class FriendsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
         return UILocalizedIndexedCollation.current().section(
-                                  forSectionIndexTitle: index
+            forSectionIndexTitle: index
         )
     }
     
@@ -145,7 +139,7 @@ class FriendsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
-            users.remove(at: indexPath.row)
+            model.remove(at: indexPath.row)
         }
     }
     
@@ -156,9 +150,9 @@ class FriendsTableViewController: UITableViewController {
         guard segue.identifier == "detailFriendsTableViewSegue" else { return }
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
         
-        let friend = users[indexPath.row]
+        let friend = model[indexPath.row]
         let friendsDetailVC = segue.destination as! FriendsDetailCollectionViewController
-        friendsDetailVC.navigationController?.title = friend
+        friendsDetailVC.navigationController?.title = friend.firstName + " " + friend.lastName
         friendsDetailVC.ownerID = ""
         friendsDetailVC.users.append(friend)
     }
@@ -188,7 +182,7 @@ extension FriendsTableViewController {
         
         let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
             guard let newList = alertTextField.text, !newList.isEmpty else { return }
-            self.users.append(newList)
+//            self.users.append(newList)
         }
         
         let cancelAction = UIAlertAction(title: "Cancel",
@@ -208,20 +202,20 @@ extension FriendsTableViewController: UISearchResultsUpdating, UISearchBarDelega
     
     // isSearchBarEmpty возвращает true, если текст, введенный в строке поиска, пуст; в противном случае возвращается false.
     var isSearchBarEmpty: Bool {
-      return searchController.searchBar.text?.isEmpty ?? true
+        return searchController.searchBar.text?.isEmpty ?? true
     }
     
     // Вычисляемое свойство, определяющее, фильтруете ли вы в настоящее время результаты или нет
     var isFiltering: Bool {
-      return searchController.isActive && !isSearchBarEmpty
+        return searchController.isActive && !isSearchBarEmpty
     }
-
+    
     
     // filterContentFor(_ searchText: String) фильтрует пользователей на основе searchText и помещает результаты в фильтр filteredUsers
     func filterContentFor(_ searchText: String) {
-        filteredUsers = users.filter { users -> Bool in
-            return users.lowercased().contains(searchText.lowercased())
-        }
+//        filteredUsers = model.filter { users -> Bool in
+//            return model.lowercased().contains(searchText.lowercased())
+//        }
         tableView.reloadData()
     }
     
