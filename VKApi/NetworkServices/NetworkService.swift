@@ -46,7 +46,7 @@ final class NetworkService {
             .init(name: "user_ids", value: "\(userID)"),
             .init(name: "order", value: "hints"),
             .init(name: "fields", value: "sex, bdate, city, country, photo_100, photo_200_orig"),
-//            .init(name: "count", value: "1"),
+            //            .init(name: "count", value: "1"),
             .init(name: "access_token", value: Session.shared.token),
             .init(name: "v", value: version)
         ]
@@ -72,16 +72,13 @@ final class NetworkService {
         }.resume()
     }
     
-    func getLoadGroups() {
-        var urlComponents = URLComponents()
+    func getLoadGroups(handler: @escaping ([Groups]) -> Void) {
         urlComponents.scheme = scheme
         urlComponents.host = vkApiHost
         urlComponents.path = "/method/groups.get"
         urlComponents.queryItems = [
             .init(name: "user_ids", value: "\(userID)"),
             .init(name: "extended", value: "1"),
-//            .init(name: "fields", value: "description"),
-            .init(name: "count", value: "1"),
             .init(name: "access_token", value: Session.shared.token),
             .init(name: "v", value: version)
         ]
@@ -93,12 +90,19 @@ final class NetworkService {
         session.dataTask(with: request) { data, response, error in
             if let error = error {
                 print(error.localizedDescription)
+                return
             }
             
             guard let data = data else { return }
             do {
-                let groupsModelData = try JSONDecoder().decode(Response<Groups>.self, from: data).response.items
+                let groupsModelData = try? JSONDecoder().decode(Response<Groups>.self, from: data).response.items
                 dump(groupsModelData)
+                
+                guard let groups = groupsModelData else { return }
+                
+                DispatchQueue.main.async {
+                    handler(groups)
+                }
             } catch {
                 print(error.localizedDescription)
             }

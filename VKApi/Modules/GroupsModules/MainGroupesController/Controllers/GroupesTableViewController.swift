@@ -13,15 +13,8 @@ class GroupesTableViewController: UITableViewController {
     // Значение nil, говорит что результаты поиска будут отображены на самом Контроллере
     // Если мы хотим показывать результаты на другом контроллере, то вместо nil нужно установить другой контроллер
     let searchController = UISearchController(searchResultsController: nil)
-    
-    let groups: [String] = [
-        "Group",
-        "Group1",
-        "Group2",
-        "Group3",
-        "Group4",
-        "Group5"
-    ]
+    var model = [Groups]()
+   
     var filteredGroups: [String] = []
     
     override func viewDidLoad() {
@@ -61,7 +54,13 @@ class GroupesTableViewController: UITableViewController {
         super.viewWillAppear(animated)
         
         let network = NetworkService()
-        network.getLoadGroups()
+        network.getLoadGroups { [weak self] data in
+            self?.model = data
+            
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        }
     }
     
     // MARK: - Table view data source
@@ -81,7 +80,7 @@ class GroupesTableViewController: UITableViewController {
             return filteredGroups.count
         }
         
-        return groups.count
+        return model.count
     }
     
     
@@ -99,9 +98,9 @@ class GroupesTableViewController: UITableViewController {
         //        cell.detailTextLabel?.text = ("\(group.followers)" + участников)
         //        return cell
         
-        let group = groups[indexPath.row]
+        let group = model[indexPath.row]
         
-        cell.groupNamedLabel.text = group
+        cell.groupNamedLabel.text = group.name
         
         return cell
     }
@@ -142,13 +141,13 @@ extension GroupesTableViewController: UISearchResultsUpdating {
     
     // filterContentFor(_ searchText: String) фильтрует группы на основе searchText и помещает результаты в фильтр filteredGroups
     func filterContentFor(_ searchText: String) {
-        if searchText.isEmpty == false {
-            let searchGroupRequest = NetworkService.shared.getFindGroups(title: searchText)
-            print(searchGroupRequest)
-        }
-        filteredGroups = groups.filter { users -> Bool in
-            return users.lowercased().contains(searchText.lowercased())
-        }
+//        if searchText.isEmpty == false {
+//            let searchGroupRequest = NetworkService.shared.getFindGroups(title: searchText)
+//            print(searchGroupRequest)
+//        }
+//        filteredGroups = model.filter { groups -> Bool in
+//            return groups.lowercased().contains(searchText.lowercased())
+//        }
         tableView.reloadData()
     }
     
