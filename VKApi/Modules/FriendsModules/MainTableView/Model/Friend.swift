@@ -35,4 +35,8 @@ import RealmSwift
     override static func primaryKey() -> String? {
         return "id"
     }
+    
+    var titleFirstLetter: String {
+        return String(self.firstName[self.firstName.startIndex]).uppercased()
+    }
 }

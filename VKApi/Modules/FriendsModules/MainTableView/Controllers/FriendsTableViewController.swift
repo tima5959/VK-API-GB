@@ -25,58 +25,14 @@ class FriendsTableViewController: UITableViewController {
     private let realm = try! Realm()
     private var friends = [Friend]()
     private var users: Results<Friend>?
+    private var filteredUsers: Results<Friend>?
     
-    
-    
-//    Станислав
-    
-//    private var friendsDict = [Character:[Friend]]()
-//    private var firstLetters: [Character] {
-//        get {
-//            friendsDict.keys.sorted()
-//        }
-//    }
-    
-//    func pairTableAndRealm() {
-//        guard let realm = try? Realm() else { return }
-//        users = realm.objects(Friend.self)
-//        token = users?.observe { [weak self] (changes: RealmCollectionChange) in
-//            switch changes {
-//            case .initial:
-//                self?.setFriends()
-//            case .update(_, _, _ , _):
-//                self?.setFriends()
-//            case .error(let error):
-//                fatalError("\(error)")
-//            }
-//        }
-//    }
-//
-//    private func setFriends() {
-//        guard let friends = self.users else { return }
-//        let filteredFriends = friends.filter { !$0.firstName.isEmpty }
-//        let list = Array(filteredFriends)
-//        self.friends = list
-//        self.friendsDict = self.getSortedUsers(searchText: nil, list: list)
-//        self.tableView.reloadData()
-//    }
-//
-//    private func getSortedUsers(searchText: String?, list: [Friend]) -> [Character:[Friend]] {
-//        var filteredFriends: [Friend]
-//        if let text = searchText?.lowercased(), searchText != "" {
-//            filteredFriends = list.filter {
-//                $0.firstName.lowercased().contains(text) || $0.lastName.lowercased().contains(text)
-//            }
-//        } else {
-//            filteredFriends = list
-//        }
-//        let sortedUsers = Dictionary.init(grouping: filteredFriends) { $0.firstName.lowercased().first ?? "#" }.mapValues { $0.sorted { $0.firstName.lowercased() < $1.firstName.lowercased() } }
-//        return sortedUsers
-//    }
+    private var sortedFirstLetters: [String] = []
+    private var sections: [[Friend]] = [[]]
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setFirstLetters()
         self.navigationItem.rightBarButtonItem = self.editButtonItem
         
         // 1 Информирует о любых тектовых изменениях
@@ -100,13 +56,14 @@ class FriendsTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setFirstLetters()
         //Станислав
 //        pairTableAndRealm()
         
         network.getLoadFriends { [weak self] data in
             guard let self = self else { return }
             self.friends = data
-
+            self.setFirstLetters()
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
@@ -118,8 +75,8 @@ class FriendsTableViewController: UITableViewController {
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
-        
         users = realm.objects(Friend.self)
+        
     }
     
     @IBAction func addFriend(_ sender: UIBarButtonItem) {
@@ -127,28 +84,29 @@ class FriendsTableViewController: UITableViewController {
         }
     }
     
+    private func setFirstLetters() {
+         let firstLetters = friends.map { $0.titleFirstLetter }
+         let uniqueFirstLetters = Array(Set(firstLetters))
+         
+         sortedFirstLetters = uniqueFirstLetters.sorted()
+         sections = sortedFirstLetters.map { firstLetter in
+             return friends.filter { $0.titleFirstLetter == firstLetter }.sorted { $0.firstName < $1.firstName }
+         }
+         
+     }
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
-                returnCharachters().count
-        
-        //Станислав
-//        return friendsDict.keys.count
+        sections.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        let model = realm.objects(Friend.self).sorted(byKeyPath: "firstName")
-        return model.count
-        
-//        Станислав
-//        guard !firstLetters.isEmpty else { return 0 }
-//        let key = firstLetters[section]
-//        return friendsDict[key]?.count ?? 0
+        sections[section].count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? FriendsTableViewCell, let model = users?[indexPath.row] else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? FriendsTableViewCell else { return UITableViewCell() }
         
+        let model = sections[indexPath.section][indexPath.row]
         cell.configure(model)
         
         return cell
@@ -177,14 +135,11 @@ class FriendsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        String(returnCharachters()[section])
-//        return String(friendsDict.keys)
+        sortedFirstLetters[section]
     }
     
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        returnCharachters()
-//        return [String(firstLetters)]
-    
+        sortedFirstLetters
     }
     
     // Override to support editing the table view.
@@ -265,9 +220,11 @@ extension FriendsTableViewController: UISearchResultsUpdating, UISearchBarDelega
     
     // filterContentFor(_ searchText: String) фильтрует пользователей на основе searchText и помещает результаты в фильтр filteredUsers
     func filterContentFor(_ searchText: String) {
-        //        filteredUsers = model.filter { users -> Bool in
-        //            return model.lowercased().contains(searchText.lowercased())
-        //        }
+        filteredUsers = realm.objects(Friend.self).filter("firstName")
+        
+//        filteredUsers = friends.filter { users -> Bool in
+//            return users.firstName.contains(searchText.lowercased())
+//        }
         tableView.reloadData()
     }
     
