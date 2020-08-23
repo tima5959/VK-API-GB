@@ -20,8 +20,6 @@ class FriendsTableViewController: UITableViewController {
     private let cellIdentifire = "cell"
     private let segueIdentifire = "detailFriendsTableViewSegue"
     
-//    private var token: NotificationToken?
-    
     private let realm = try! Realm()
     private var friends = [Friend]()
     private var users: Results<Friend>?
@@ -57,8 +55,6 @@ class FriendsTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setFirstLetters()
-        //Станислав
-//        pairTableAndRealm()
         
         network.getLoadFriends { [weak self] data in
             guard let self = self else { return }
@@ -87,13 +83,12 @@ class FriendsTableViewController: UITableViewController {
     private func setFirstLetters() {
          let firstLetters = friends.map { $0.titleFirstLetter }
          let uniqueFirstLetters = Array(Set(firstLetters))
-         
          sortedFirstLetters = uniqueFirstLetters.sorted()
          sections = sortedFirstLetters.map { firstLetter in
              return friends.filter { $0.titleFirstLetter == firstLetter }.sorted { $0.firstName < $1.firstName }
          }
-         
      }
+    
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
         sections.count
@@ -117,22 +112,6 @@ class FriendsTableViewController: UITableViewController {
     }
     
     // MARK: - Sections
-    func returnCharachters() -> [String] {
-        var letterArray = [String]()
-        for string in friends {
-            if let letter = string.firstName.first {
-                letterArray.append(String(letter))
-            }
-        }
-        letterArray = letterArray.sorted()
-        letterArray = letterArray.reduce([]) { result, string -> [String] in
-            if !result.contains(string) {
-                return result + [string]
-            }
-            return result
-        }
-        return letterArray
-    }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         sortedFirstLetters[section]
