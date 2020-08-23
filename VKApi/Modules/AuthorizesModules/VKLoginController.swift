@@ -17,7 +17,6 @@ class VKLoginController: UIViewController {
         }
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
     
@@ -48,7 +47,9 @@ extension VKLoginController: WKNavigationDelegate {
         
         print(params)
         
-        guard let token = params["access_token"], let userId = Int(params["user_id"]!) else {
+        guard
+            let token = params["access_token"],
+            let userId = Int(params["user_id"]!) else {
             decisionHandler(.cancel)
             return
         }

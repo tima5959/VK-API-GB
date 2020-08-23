@@ -87,17 +87,6 @@ class GroupesTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "groupMainCell", for: indexPath) as! GroupesTableViewCell
         
-        //        let group: Groups
-        //        if isFiltering {
-        //          group = filteredGroups[indexPath.row]
-        //        } else {
-        //          group = groups[indexPath.row]
-        //        }
-        //        cell.imageView?.image = group.image
-        //        cell.textLabel?.text = group.name
-        //        cell.detailTextLabel?.text = ("\(group.followers)" + участников)
-        //        return cell
-        
         let group = model[indexPath.row]
         
         cell.groupNamedLabel.text = group.name
@@ -105,15 +94,11 @@ class GroupesTableViewController: UITableViewController {
         return cell
     }
     
-    
-    
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }
-    
-    
     
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -137,7 +122,6 @@ extension GroupesTableViewController: UISearchResultsUpdating {
     var isFiltering: Bool {
         return searchController.isActive && !isSearchBarEmpty
     }
-    
     
     // filterContentFor(_ searchText: String) фильтрует группы на основе searchText и помещает результаты в фильтр filteredGroups
     func filterContentFor(_ searchText: String) {

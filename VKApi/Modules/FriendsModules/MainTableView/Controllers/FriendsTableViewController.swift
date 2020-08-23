@@ -7,24 +7,75 @@
 //
 
 import UIKit
+import RealmSwift
 
 class FriendsTableViewController: UITableViewController {
     
+    let network = NetworkService()
+    
+    private let searchController = UISearchController(searchResultsController: nil)
     // Значение nil, говорит что результаты поиска будут отображены на самом Контроллере
     // Если мы хотим показывать результаты на другом контроллере, то вместо nil нужно установить другой контроллер
-    private let network = NetworkService()
-    private var model = [Friend]()
-    private let searchController = UISearchController(searchResultsController: nil)
     
     private let cellIdentifire = "cell"
     private let segueIdentifire = "detailFriendsTableViewSegue"
     
-    var filteredUsers: [Friend] = []
+//    private var token: NotificationToken?
+    
+    private let realm = try! Realm()
+    private var friends = [Friend]()
+    private var users: Results<Friend>?
+    
+    
+    
+//    Станислав
+    
+//    private var friendsDict = [Character:[Friend]]()
+//    private var firstLetters: [Character] {
+//        get {
+//            friendsDict.keys.sorted()
+//        }
+//    }
+    
+//    func pairTableAndRealm() {
+//        guard let realm = try? Realm() else { return }
+//        users = realm.objects(Friend.self)
+//        token = users?.observe { [weak self] (changes: RealmCollectionChange) in
+//            switch changes {
+//            case .initial:
+//                self?.setFriends()
+//            case .update(_, _, _ , _):
+//                self?.setFriends()
+//            case .error(let error):
+//                fatalError("\(error)")
+//            }
+//        }
+//    }
+//
+//    private func setFriends() {
+//        guard let friends = self.users else { return }
+//        let filteredFriends = friends.filter { !$0.firstName.isEmpty }
+//        let list = Array(filteredFriends)
+//        self.friends = list
+//        self.friendsDict = self.getSortedUsers(searchText: nil, list: list)
+//        self.tableView.reloadData()
+//    }
+//
+//    private func getSortedUsers(searchText: String?, list: [Friend]) -> [Character:[Friend]] {
+//        var filteredFriends: [Friend]
+//        if let text = searchText?.lowercased(), searchText != "" {
+//            filteredFriends = list.filter {
+//                $0.firstName.lowercased().contains(text) || $0.lastName.lowercased().contains(text)
+//            }
+//        } else {
+//            filteredFriends = list
+//        }
+//        let sortedUsers = Dictionary.init(grouping: filteredFriends) { $0.firstName.lowercased().first ?? "#" }.mapValues { $0.sorted { $0.firstName.lowercased() < $1.firstName.lowercased() } }
+//        return sortedUsers
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         
         self.navigationItem.rightBarButtonItem = self.editButtonItem
         
@@ -49,14 +100,26 @@ class FriendsTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        //Станислав
+//        pairTableAndRealm()
         
-        network.getLoadFriends(handler: { [weak self] data in
-            self?.model = data
-            
+        network.getLoadFriends { [weak self] data in
+            guard let self = self else { return }
+            self.friends = data
+
             DispatchQueue.main.async {
-                self?.tableView.reloadData()
+                self.tableView.reloadData()
             }
-        })
+        }
+        
+        // Сохраняем в бд массив друзей
+        RealmService.saveInRealm(items: friends)
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+        
+        users = realm.objects(Friend.self)
     }
     
     @IBAction func addFriend(_ sender: UIBarButtonItem) {
@@ -64,99 +127,86 @@ class FriendsTableViewController: UITableViewController {
         }
     }
     
-    
     // MARK: - Table view data source
+    override func numberOfSections(in tableView: UITableView) -> Int {
+                returnCharachters().count
+        
+        //Станислав
+//        return friendsDict.keys.count
+    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isFiltering {
-            return filteredUsers.count
-        }
         
+        let model = realm.objects(Friend.self).sorted(byKeyPath: "firstName")
         return model.count
+        
+//        Станислав
+//        guard !firstLetters.isEmpty else { return 0 }
+//        let key = firstLetters[section]
+//        return friendsDict[key]?.count ?? 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! FriendsTableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? FriendsTableViewCell, let model = users?[indexPath.row] else { return UITableViewCell() }
         
-        //        let candy: User
-        //        if isFiltering {
-        //          user = filteredUsers[indexPath.row]
-        //        } else {
-        //          user = users[indexPath.row]
-        //        }
-        //        cell.textLabel?.text = user.name
-        //        cell.detailTextLabel?.text = user.birth
-        //        return cell
-        
-        let user = model[indexPath.row]
-        cell.configure(with: user)
+        cell.configure(model)
         
         return cell
     }
     
-    // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
     // MARK: - Sections
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // Build letters array:
-        
-        var letters: [Character]
-        
-        letters = model.map { (surname) -> Character in
-            return surname.firstName[surname.firstName.startIndex]
-        }
-        
-        letters = letters.sorted()
-        
-        letters = letters.reduce([], { (list, name) -> [Character] in
-            if !list.contains(name) {
-                return list + [name]
+    func returnCharachters() -> [String] {
+        var letterArray = [String]()
+        for string in friends {
+            if let letter = string.firstName.first {
+                letterArray.append(String(letter))
             }
-            return list
-        })
-        return letters.count
+        }
+        letterArray = letterArray.sorted()
+        letterArray = letterArray.reduce([]) { result, string -> [String] in
+            if !result.contains(string) {
+                return result + [string]
+            }
+            return result
+        }
+        return letterArray
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return UILocalizedIndexedCollation.current().sectionTitles[section]
+        String(returnCharachters()[section])
+//        return String(friendsDict.keys)
     }
     
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        return UILocalizedIndexedCollation.current().sectionTitles
-    }
+        returnCharachters()
+//        return [String(firstLetters)]
     
-    override func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
-        return UILocalizedIndexedCollation.current().section(
-            forSectionIndexTitle: index
-        )
     }
     
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
-            model.remove(at: indexPath.row)
         }
     }
     
     // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    // При использовании сторибордов, необходимо подготовить переход (передача данных)
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard segue.identifier == "detailFriendsTableViewSegue" else { return }
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
         
-        let friend = model[indexPath.row]
-        let friendsDetailVC = segue.destination as! FriendsDetailCollectionViewController
-        friendsDetailVC.navigationController?.title = friend.firstName + " " + friend.lastName
-        friendsDetailVC.ownerID = ""
-        friendsDetailVC.users.append(friend)
+        if let friend = users?[indexPath.row] {
+            let friendsDetailVC = segue.destination as! FriendsDetailCollectionViewController
+            friendsDetailVC.navigationController?.title = friend.firstName + " " + friend.lastName
+            friendsDetailVC.ownerID = ""
+            friendsDetailVC.users.append(friend)
+        }
     }
-    
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let _ = tableView.indexPathForSelectedRow {
@@ -165,9 +215,12 @@ class FriendsTableViewController: UITableViewController {
     }
 }
 
-
+// MARK: - Alert Controller
 extension FriendsTableViewController {
-    func addAndEditFirends(title: String, message: String, placeholder: String, completion: (() -> Void)? = nil) {
+    func addAndEditFirends(title: String,
+                           message: String,
+                           placeholder: String,
+                           completion: (() -> Void)? = nil) {
         
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
@@ -182,7 +235,6 @@ extension FriendsTableViewController {
         
         let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
             guard let newList = alertTextField.text, !newList.isEmpty else { return }
-//            self.users.append(newList)
         }
         
         let cancelAction = UIAlertAction(title: "Cancel",
@@ -213,9 +265,9 @@ extension FriendsTableViewController: UISearchResultsUpdating, UISearchBarDelega
     
     // filterContentFor(_ searchText: String) фильтрует пользователей на основе searchText и помещает результаты в фильтр filteredUsers
     func filterContentFor(_ searchText: String) {
-//        filteredUsers = model.filter { users -> Bool in
-//            return model.lowercased().contains(searchText.lowercased())
-//        }
+        //        filteredUsers = model.filter { users -> Bool in
+        //            return model.lowercased().contains(searchText.lowercased())
+        //        }
         tableView.reloadData()
     }
     

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,6 +13,7 @@
 		B52EE8E124E5D8E200176EAA /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52EE8E024E5D8E200176EAA /* NetworkService.swift */; };
 		B52EE8E424E5E29E00176EAA /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B52EE8E324E5E29E00176EAA /* WebKit.framework */; };
 		B53FB72D24CF5CDA0009977E /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53FB72C24CF5CDA0009977E /* Extension.swift */; };
+		B550E32924EEF50600C42755 /* RealmService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B550E32824EEF50600C42755 /* RealmService.swift */; };
 		B5B69AF924CC85A600E9B552 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B69AF824CC85A600E9B552 /* AppDelegate.swift */; };
 		B5B69AFB24CC85A600E9B552 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B69AFA24CC85A600E9B552 /* SceneDelegate.swift */; };
 		B5B69AFD24CC85A600E9B552 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B69AFC24CC85A600E9B552 /* ViewController.swift */; };
@@ -42,6 +43,7 @@
 		B52EE8E024E5D8E200176EAA /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		B52EE8E324E5E29E00176EAA /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		B53FB72C24CF5CDA0009977E /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		B550E32824EEF50600C42755 /* RealmService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmService.swift; sourceTree = "<group>"; };
 		B5B69AF524CC85A600E9B552 /* VKApi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VKApi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5B69AF824CC85A600E9B552 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B5B69AFA24CC85A600E9B552 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -97,6 +99,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		B550E32724EEF4E000C42755 /* StorageManager */ = {
+			isa = PBXGroup;
+			children = (
+				B550E32824EEF50600C42755 /* RealmService.swift */,
+			);
+			path = StorageManager;
+			sourceTree = "<group>";
+		};
 		B57AF11024E864F700D8D7F7 /* AuthorizesModules */ = {
 			isa = PBXGroup;
 			children = (
@@ -129,6 +139,7 @@
 			children = (
 				B5FC403E24D44FF400B56697 /* Main.storyboard */,
 				B5DAC13624CDE7D20081C6E2 /* Helpers */,
+				B550E32724EEF4E000C42755 /* StorageManager */,
 				B52EE8DF24E5D8B000176EAA /* NetworkServices */,
 				B5DAC13524CDE7A00081C6E2 /* Modules */,
 				B5B69B0624CC85A700E9B552 /* Info.plist */,
@@ -263,7 +274,6 @@
 				EBDC7CA7A0C72A7A4A1C7D84 /* Pods-VKApi.debug.xcconfig */,
 				42E07992D5FB76B09D3A7511 /* Pods-VKApi.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -398,6 +408,7 @@
 				B5DAC13F24CDE8DC0081C6E2 /* FriendsTableViewCell.swift in Sources */,
 				B5B69AFB24CC85A600E9B552 /* SceneDelegate.swift in Sources */,
 				B5DAC14624CDE96C0081C6E2 /* GroupesTableViewController.swift in Sources */,
+				B550E32924EEF50600C42755 /* RealmService.swift in Sources */,
 				B5DAC14A24CDE98B0081C6E2 /* DetailTableViewCell.swift in Sources */,
 				B5EA886024E9745A002C13E0 /* Friend.swift in Sources */,
 				B5DAC13A24CDE8720081C6E2 /* FriendsDetailCollectionViewController.swift in Sources */,

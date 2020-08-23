@@ -127,7 +127,7 @@ final class NetworkService {
         
         session.dataTask(with: request) { data, response, error in
             let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-            print(json ?? "")
+//            print(json ?? "")
         }.resume()
     }
     
@@ -149,7 +149,7 @@ final class NetworkService {
         request.httpMethod = "GET"
         session.dataTask(with: request) { data, response, error in
             let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-            print(json ?? "")
+//            print(json ?? "")
         }.resume()
     }
     

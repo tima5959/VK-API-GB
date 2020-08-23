@@ -7,21 +7,32 @@
 //
 
 import Foundation
+import RealmSwift
 
-struct Friend: Codable, CustomStringConvertible {
-    var description: String {
-        return "id =\(id), name = \(firstName), last name = \(lastName), url = \(avatarURL)"
-    }
+@objcMembers class Friend: Object, Codable {
     
-    var id: Int = 0
-    var firstName: String = ""
-    var lastName: String = ""
-    var avatarURL: String = ""
+    dynamic var id: Int = 0
+    dynamic var firstName: String = ""
+    dynamic var lastName: String = ""
+    dynamic var avatarURL: String = ""
     
     enum CodingKeys: String, CodingKey {
         case id
         case firstName = "first_name"
         case lastName = "last_name"
         case avatarURL = "photo_100"
+    }
+    
+    convenience init(id: Int, firstName: String, lastName: String, avatarURL: String) {
+        self.init()
+        
+        self.id = id
+        self.firstName = firstName
+        self.lastName = lastName
+        self.avatarURL = avatarURL
+    }
+    
+    override static func primaryKey() -> String? {
+        return "id"
     }
 }
