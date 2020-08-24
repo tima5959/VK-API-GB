@@ -46,7 +46,6 @@ final class NetworkService {
             .init(name: "user_ids", value: "\(userID)"),
             .init(name: "order", value: "hints"),
             .init(name: "fields", value: "sex, bdate, city, country, photo_100, photo_200_orig"),
-            //            .init(name: "count", value: "1"),
             .init(name: "access_token", value: Session.shared.token),
             .init(name: "v", value: version)
         ]
@@ -58,16 +57,14 @@ final class NetworkService {
                 print(error.localizedDescription)
                 return
             }
+            
             guard let data = data else { return }
-            do {
-                let friendsModelData = try? JSONDecoder().decode(Response<Friend>.self, from: data).response.items
-                dump(friendsModelData)
-                guard let data = friendsModelData else { return }
+            
+            guard let friendsModelData = try? JSONDecoder().decode(Response<Friend>.self, from: data).response.items else { return }
+            
+//                guard let data = friendsModelData else { return }
                 DispatchQueue.main.async {
-                    handler(data)
-                }
-            } catch {
-                print(error.localizedDescription)
+                    handler(friendsModelData)
             }
         }.resume()
     }
@@ -96,10 +93,7 @@ final class NetworkService {
             guard let data = data else { return }
             do {
                 let groupsModelData = try? JSONDecoder().decode(Response<Groups>.self, from: data).response.items
-                dump(groupsModelData)
-                
                 guard let groups = groupsModelData else { return }
-                
                 DispatchQueue.main.async {
                     handler(groups)
                 }
@@ -127,7 +121,7 @@ final class NetworkService {
         
         session.dataTask(with: request) { data, response, error in
             let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-//            print(json ?? "")
+            print(json ?? "")
         }.resume()
     }
     
@@ -149,7 +143,7 @@ final class NetworkService {
         request.httpMethod = "GET"
         session.dataTask(with: request) { data, response, error in
             let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-//            print(json ?? "")
+            print(json ?? "")
         }.resume()
     }
     

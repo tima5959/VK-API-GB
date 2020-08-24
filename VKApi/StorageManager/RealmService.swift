@@ -11,8 +11,27 @@ import RealmSwift
 
 class RealmService {
     static let deleteIfMigration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
+        
+    var networking: NetworkService?
     
-    
+    init() {
+        self.networking = NetworkService()
+    }
+        
+    func fetchFriends(updatePolicy: Realm.UpdatePolicy = .modified) {
+        networking?.getLoadFriends(handler: { data in
+            do {
+                let realm = try Realm()
+                let object = realm.objects(Friend.self)
+                
+                try realm.write {
+                    realm.add(data, update: updatePolicy)
+                }
+            } catch let error {
+                print(error.localizedDescription)
+            }
+        })
+    }
     
     static func saveInRealm<T: Object>(items: [T],
                                        config: Realm.Configuration = Realm.Configuration.defaultConfiguration,

@@ -11,11 +11,14 @@ import RealmSwift
 
 class FriendsTableViewController: UITableViewController {
     
-    let network = NetworkService()
+    let networkManager = NetworkService()
+    let storageManager = RealmService()
     
     private let searchController = UISearchController(searchResultsController: nil)
     // Значение nil, говорит что результаты поиска будут отображены на самом Контроллере
     // Если мы хотим показывать результаты на другом контроллере, то вместо nil нужно установить другой контроллер
+    
+    private var notificationToken: NotificationToken?
     
     private let cellIdentifire = "cell"
     private let segueIdentifire = "detailFriendsTableViewSegue"
@@ -30,7 +33,9 @@ class FriendsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setFirstLetters()
+        
+        setNotificationToken()
+        
         self.navigationItem.rightBarButtonItem = self.editButtonItem
         
         // 1 Информирует о любых тектовых изменениях
@@ -54,25 +59,22 @@ class FriendsTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setFirstLetters()
         
-        network.getLoadFriends { [weak self] data in
-            guard let self = self else { return }
-            self.friends = data
-            self.setFirstLetters()
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
+        setNotificationToken()
         
+//        storageManager.fetchFriends()
+//        networkManager.getLoadFriends { [weak self] data in
+//            guard let self = self else { return }
+//            self.friends = data
+////            self.setNotificationToken()
+//            self.setFirstLetters()
+//            DispatchQueue.main.async {
+//                self.tableView.reloadData()
+//            }
+//        }
         // Сохраняем в бд массив друзей
-        RealmService.saveInRealm(items: friends)
-        
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
-        users = realm.objects(Friend.self)
-        
+//        RealmService.saveInRealm(items: friends)
+//        users = realm.objects(Friend.self)
     }
     
     @IBAction func addFriend(_ sender: UIBarButtonItem) {
@@ -81,13 +83,37 @@ class FriendsTableViewController: UITableViewController {
     }
     
     private func setFirstLetters() {
-         let firstLetters = friends.map { $0.titleFirstLetter }
-         let uniqueFirstLetters = Array(Set(firstLetters))
-         sortedFirstLetters = uniqueFirstLetters.sorted()
-         sections = sortedFirstLetters.map { firstLetter in
-             return friends.filter { $0.titleFirstLetter == firstLetter }.sorted { $0.firstName < $1.firstName }
-         }
-     }
+        guard let users = self.users else { return }
+        let tmpFriends = users.filter{ !$0.firstName.isEmpty }
+        self.friends = Array(tmpFriends)
+        
+        let firstLetters = friends.map { $0.titleFirstLetter }
+        let uniqueFirstLetters = Array(Set(firstLetters))
+        sortedFirstLetters = uniqueFirstLetters.sorted()
+        sections = sortedFirstLetters.map { firstLetter in
+            return friends.filter { $0.titleFirstLetter == firstLetter }.sorted { $0.firstName < $1.firstName }
+        }
+        self.tableView.reloadData()
+    }
+    
+    private func setNotificationToken() {
+        guard let realm = try? Realm() else { return }
+        users = realm.objects(Friend.self)
+        setFirstLetters()
+        notificationToken = users?.observe { changes in
+            switch changes {
+            case .initial(_):
+                self.storageManager.fetchFriends()
+                self.setFirstLetters()
+                
+            case .update(_, _, _, _):
+                self.storageManager.fetchFriends()
+                self.setFirstLetters()
+            case .error(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
     
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -201,9 +227,9 @@ extension FriendsTableViewController: UISearchResultsUpdating, UISearchBarDelega
     func filterContentFor(_ searchText: String) {
         filteredUsers = realm.objects(Friend.self).filter("firstName")
         
-//        filteredUsers = friends.filter { users -> Bool in
-//            return users.firstName.contains(searchText.lowercased())
-//        }
+        //        filteredUsers = friends.filter { users -> Bool in
+        //            return users.firstName.contains(searchText.lowercased())
+        //        }
         tableView.reloadData()
     }
     
