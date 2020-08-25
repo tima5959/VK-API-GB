@@ -98,14 +98,13 @@ class FriendsTableViewController: UITableViewController {
     
     private func setNotificationToken() {
         guard let realm = try? Realm() else { return }
-        users = realm.objects(Friend.self)
+        users = try? storageManager.fetchByRealm(items: Friend.self)
         setFirstLetters()
         notificationToken = users?.observe { changes in
             switch changes {
             case .initial(_):
                 self.storageManager.fetchFriends()
                 self.setFirstLetters()
-                
             case .update(_, _, _, _):
                 self.storageManager.fetchFriends()
                 self.setFirstLetters()

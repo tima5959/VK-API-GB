@@ -7,20 +7,22 @@
 //
 
 import UIKit
+import RealmSwift
 
 class GroupesTableViewController: UITableViewController {
     
     // Значение nil, говорит что результаты поиска будут отображены на самом Контроллере
     // Если мы хотим показывать результаты на другом контроллере, то вместо nil нужно установить другой контроллер
     let searchController = UISearchController(searchResultsController: nil)
-    var model = [Groups]()
    
-    var filteredGroups: [String] = []
+    private let storageManager = RealmService()
     
+    private var notificationToken: NotificationToken?
+    private var model: Results<Groups>?
+    private let realm = try! Realm()
+   
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         
         let refreshControll = UIRefreshControl()
         refreshControll.addTarget(self,
@@ -53,12 +55,30 @@ class GroupesTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let network = NetworkService()
-        network.getLoadGroups { [weak self] data in
-            self?.model = data
-            
-            DispatchQueue.main.async {
-                self?.tableView.reloadData()
+        setNotificationToken()
+        
+//        let network = NetworkService()
+//        network.getLoadGroups { [weak self] data in
+//            self?.model = data
+//
+//            DispatchQueue.main.async {
+//                self?.tableView.reloadData()
+//            }
+//        }
+    }
+    
+    func setNotificationToken() {
+        model = try? storageManager.fetchByRealm(items: Groups.self)
+        notificationToken = model?.observe { changes in
+            switch changes {
+            case .initial(_):
+                self.storageManager.fetchGroups()
+                self.tableView.reloadData()
+            case .update(_, _, _, _):
+                self.storageManager.fetchGroups()
+                self.tableView.reloadData()
+            case .error(let error):
+                print(error.localizedDescription)
             }
         }
     }
@@ -76,20 +96,16 @@ class GroupesTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isFiltering {
-            return filteredGroups.count
-        }
-        
-        return model.count
+        model?.count ?? 0
     }
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "groupMainCell", for: indexPath) as! GroupesTableViewCell
         
-        let group = model[indexPath.row]
+        let group = model?[indexPath.row]
         
-        cell.groupNamedLabel.text = group.name
+        cell.groupNamedLabel.text = group?.name
         
         return cell
     }

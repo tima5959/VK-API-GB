@@ -10,7 +10,7 @@ import Foundation
 import RealmSwift
 
 class RealmService {
-    static let deleteIfMigration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
+    let deleteIfMigration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
         
     var networking: NetworkService?
     
@@ -19,21 +19,32 @@ class RealmService {
     }
         
     func fetchFriends(updatePolicy: Realm.UpdatePolicy = .modified) {
-        networking?.getLoadFriends(handler: { data in
+        networking?.getLoadFriends { data in
             do {
                 let realm = try Realm()
-                let object = realm.objects(Friend.self)
-                
                 try realm.write {
                     realm.add(data, update: updatePolicy)
                 }
             } catch let error {
                 print(error.localizedDescription)
             }
-        })
+        }
     }
     
-    static func saveInRealm<T: Object>(items: [T],
+    func fetchGroups(updatePolicy: Realm.UpdatePolicy = .modified) {
+        networking?.getLoadGroups { data in
+            do {
+                let realm = try Realm()
+                try realm.write {
+                    realm.add(data, update: updatePolicy)
+                }
+            } catch let error {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func saveInRealm<T: Object>(items: [T],
                                        config: Realm.Configuration = Realm.Configuration.defaultConfiguration,
                                        updatePolicy: Realm.UpdatePolicy = .modified) {
         
@@ -50,7 +61,7 @@ class RealmService {
         }
     }
     
-    static func fetchByRealm<T: Object>(
+    func fetchByRealm<T: Object>(
         items: T.Type,
         config: Realm.Configuration = Realm.Configuration.defaultConfiguration
     ) throws -> Results<T> {
