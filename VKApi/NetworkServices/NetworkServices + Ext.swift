@@ -10,7 +10,7 @@ import UIKit
 
 extension NetworkService {
     
-    func fetchPhoto(_ url: String) {
+    private func fetchPhoto(_ url: String) {
         guard let urlRequest = URL(string: url) else { return }
         let request = URLRequest(url: urlRequest)
         URLSession.shared.dataTask(with: request) { (data, response, error) in

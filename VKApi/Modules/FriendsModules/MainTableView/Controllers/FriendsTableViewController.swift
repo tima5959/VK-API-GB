@@ -34,6 +34,7 @@ class FriendsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         setNotificationToken()
         
         self.navigationItem.rightBarButtonItem = self.editButtonItem

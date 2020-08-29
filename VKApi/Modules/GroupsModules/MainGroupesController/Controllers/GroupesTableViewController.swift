@@ -20,11 +20,12 @@ class GroupesTableViewController: UITableViewController {
     private var notificationToken: NotificationToken?
     private var model: Results<Groups>?
     private var groups: [Groups] = [Groups]()
-    private let realm = try! Realm()
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         
         let refreshControll = UIRefreshControl()
         refreshControll.addTarget(self,
@@ -88,8 +89,14 @@ class GroupesTableViewController: UITableViewController {
     // MARK: - Table view data source
     
     @objc func refreshFunc() {
-        tableView.reloadData()
-        tableView.refreshControl?.endRefreshing()
+        networkService.getLoadGroups(handler: { [weak self] community in
+            self?.groups = community
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+            self?.tableView.refreshControl?.endRefreshing()
+        })
+        
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
