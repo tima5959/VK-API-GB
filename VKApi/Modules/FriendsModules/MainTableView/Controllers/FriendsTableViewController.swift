@@ -61,35 +61,32 @@ class FriendsTableViewController: UITableViewController {
         super.viewWillAppear(animated)
         
         setNotificationToken()
-        
-//        storageManager.fetchFriends()
-//        networkManager.getLoadFriends { [weak self] data in
-//            guard let self = self else { return }
-//            self.friends = data
-////            self.setNotificationToken()
-//            self.setFirstLetters()
-//            DispatchQueue.main.async {
-//                self.tableView.reloadData()
-//            }
-//        }
-        // Сохраняем в бд массив друзей
-//        RealmService.saveInRealm(items: friends)
-//        users = realm.objects(Friend.self)
     }
     
     @IBAction func addFriend(_ sender: UIBarButtonItem) {
-        addAndEditFirends(title: "Add", message: "Add new friend", placeholder: "Name") {
+        addAndEditFirends(title: "Add",
+                          message: "Add new friend",
+                          placeholder: "Name") {
         }
     }
     
     private func setFirstLetters() {
+        // Проверяю Realm<Result>
         guard let users = self.users else { return }
-        let tmpFriends = users.filter{ !$0.firstName.isEmpty }
-        self.friends = Array(tmpFriends)
-        
+        // Фильтрую друзей по имени и проверяю на nil
+        let filteredFriends = users.filter { !$0.firstName.isEmpty }
+        // Добавляю в массив типа [Friend] отфильтрованных по имени друзей
+        self.friends = Array(filteredFriends)
+        // Передаю в функцию модели Friends массив отфильтрованных по имени друзей
+        // Чтобы получить первую букву их имени
         let firstLetters = friends.map { $0.titleFirstLetter }
+        // Убираю повторяющиеся буквы
         let uniqueFirstLetters = Array(Set(firstLetters))
+        // Сортирую буквы
         sortedFirstLetters = uniqueFirstLetters.sorted()
+        // Добавляю в [[sections]] буквы
+        // Возвращаю [Friend] отфильрованный по этим буквам
+        // Возвращаю [Friend] отсортированный от А до Я || от A до Z
         sections = sortedFirstLetters.map { firstLetter in
             return friends.filter { $0.titleFirstLetter == firstLetter }.sorted { $0.firstName < $1.firstName }
         }
@@ -97,7 +94,6 @@ class FriendsTableViewController: UITableViewController {
     }
     
     private func setNotificationToken() {
-        guard let realm = try? Realm() else { return }
         users = try? storageManager.fetchByRealm(items: Friend.self)
         setFirstLetters()
         notificationToken = users?.observe { changes in
@@ -127,7 +123,10 @@ class FriendsTableViewController: UITableViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? FriendsTableViewCell else { return UITableViewCell() }
         
         let model = sections[indexPath.section][indexPath.row]
-        cell.configure(model)
+        
+        cell.nameLabel.text = model.firstName + " " + model.lastName
+        cell.avatarImageView.image = networkManager.setPhoto(atIndexPath: indexPath,
+                                                             byUrl: model.avatarURL)
         
         return cell
     }
@@ -162,7 +161,7 @@ class FriendsTableViewController: UITableViewController {
         if let friend = users?[indexPath.row] {
             let friendsDetailVC = segue.destination as! FriendsDetailCollectionViewController
             friendsDetailVC.navigationController?.title = friend.firstName + " " + friend.lastName
-            friendsDetailVC.ownerID = ""
+            friendsDetailVC.ownerID = friend.id
             friendsDetailVC.users.append(friend)
         }
     }

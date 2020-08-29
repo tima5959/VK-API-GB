@@ -703,7 +703,7 @@
                                 </collectionViewCellContentView>
                                 <size key="customSize" width="350" height="350"/>
                                 <connections>
-                                    <outlet property="imageView" destination="0Uw-Ia-yk8" id="vlN-bu-oUe"/>
+                                    <outlet property="friendsPhotos" destination="0Uw-Ia-yk8" id="akd-gM-6pS"/>
                                     <outlet property="nameOutlet" destination="iVm-0k-4Xa" id="sEO-jz-xSG"/>
                                 </connections>
                             </collectionViewCell>

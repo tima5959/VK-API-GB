@@ -16,11 +16,13 @@ class GroupesTableViewController: UITableViewController {
     let searchController = UISearchController(searchResultsController: nil)
    
     private let storageManager = RealmService()
-    
+    private let networkService = NetworkService()
     private var notificationToken: NotificationToken?
     private var model: Results<Groups>?
+    private var groups: [Groups] = [Groups]()
     private let realm = try! Realm()
-   
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -57,14 +59,14 @@ class GroupesTableViewController: UITableViewController {
         
         setNotificationToken()
         
-//        let network = NetworkService()
-//        network.getLoadGroups { [weak self] data in
-//            self?.model = data
-//
-//            DispatchQueue.main.async {
-//                self?.tableView.reloadData()
-//            }
-//        }
+        networkService.getLoadGroups(handler: { [weak self] community in
+            self?.groups = community
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        })
+        
+        
     }
     
     func setNotificationToken() {
@@ -96,16 +98,16 @@ class GroupesTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        model?.count ?? 0
+        groups.count
     }
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "groupMainCell", for: indexPath) as! GroupesTableViewCell
         
-        let group = model?[indexPath.row]
-        
-        cell.groupNamedLabel.text = group?.name
+        let group = groups[indexPath.row]
+        cell.groupNamedLabel.text = group.name
+        cell.imageViewOutlet.image = networkService.setPhoto(atIndexPath: indexPath, byUrl: group.avatarURL)
         
         return cell
     }
@@ -169,5 +171,6 @@ extension GroupesTableViewController: UISearchResultsUpdating {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         self.tableView.isUserInteractionEnabled = false
     }
+    
     
 }

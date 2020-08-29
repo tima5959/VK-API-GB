@@ -10,14 +10,8 @@ import UIKit
 
 class GroupesTableViewCell: UITableViewCell {
     
-    @IBOutlet weak var imageViewOutlet: UIImageView! {
-        didSet {
-            setShadowForImageView(imageViewOutlet)
-        }
-    }
-    
+    @IBOutlet weak var imageViewOutlet: UIImageView!
     @IBOutlet weak var groupNamedLabel: UILabel!
-    
     @IBOutlet weak var groupTypeLabel: UILabel!
     
     
@@ -44,4 +38,5 @@ class GroupesTableViewCell: UITableViewCell {
             self.imageViewOutlet.transform = .identity
         }
     }
+    
 }

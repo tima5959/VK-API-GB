@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 final class NetworkService {
     static let shared = NetworkService()
@@ -19,6 +20,8 @@ final class NetworkService {
     private let version = "5.122"
     private let autorizeHost = "oauth.vk.com"
     private let vkApiHost = "api.vk.com"
+    
+    var images = [String: UIImage]()
     
     func getAuthorized() -> URLRequest {
         urlComponents.scheme = scheme
@@ -119,28 +122,6 @@ final class NetworkService {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
-        session.dataTask(with: request) { data, response, error in
-            let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-            print(json ?? "")
-        }.resume()
-    }
-    
-    func getPhotos(_ ownerID: Int?) {
-        guard let owners = ownerID else { return }
-        urlComponents.scheme = scheme
-        urlComponents.host = vkApiHost
-        urlComponents.path = "/method/photos.getAll"
-        urlComponents.queryItems = [
-            .init(name: "user_ids", value: "\(userID)"),
-            .init(name: "owner_id", value: String(owners)),
-            .init(name: "extended", value: "1"),
-            .init(name: "photo_sizes", value: "1"),
-            .init(name: "access_token", value: Session.shared.token),
-            .init(name: "v", value: version),
-        ]
-        guard let url = urlComponents.url else { return }
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
         session.dataTask(with: request) { data, response, error in
             let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments)
             print(json ?? "")

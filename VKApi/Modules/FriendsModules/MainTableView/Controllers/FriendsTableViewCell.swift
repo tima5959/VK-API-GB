@@ -10,12 +10,7 @@ import UIKit
 
 class FriendsTableViewCell: UITableViewCell {
     
-    @IBOutlet weak var avatarImageView: UIImageView! {
-        didSet {
-//            setShadowForImageView(avatarImageView)
-        }
-    }
-    
+    @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     
     override func awakeFromNib() {
@@ -36,14 +31,12 @@ class FriendsTableViewCell: UITableViewCell {
                        animations: { [unowned self] in
                         let scale = CGAffineTransform(scaleX: 0.8, y: 0.8)
                         self.avatarImageView.transform = scale
-//                        self.shadowView.transform = scale
         }) { [unowned self] _ in
             self.avatarImageView.transform = .identity
-//            self.shadowView.transform = .identity
         }
     }
     
-    public func configure(_ model: Friend) {
-        self.nameLabel.text = model.firstName
-    }
+//    public func configure(_ model: Friend) {
+//        self.nameLabel.text = model.firstName
+//    }
 }

@@ -10,9 +10,9 @@ import UIKit
 
 class FriendsDetailCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var imageView: UIImageView! {
+    @IBOutlet weak var friendsPhotos: UIImageView! {
         didSet {
-            setShadowForImageView(imageView)
+            setShadowForImageView(friendsPhotos)
         }
     }
     
