@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import Kingfisher
 
 class FriendsTableViewController: UITableViewController {
     
@@ -25,8 +26,7 @@ class FriendsTableViewController: UITableViewController {
     
     private let realm = try! Realm()
     private var friends = [Friend]()
-    private var users: Results<Friend>?
-    private var filteredUsers: Results<Friend>?
+    private var users: Results<Friend>!
     
     private var sortedFirstLetters: [String] = []
     private var sections: [[Friend]] = [[]]
@@ -62,13 +62,6 @@ class FriendsTableViewController: UITableViewController {
         super.viewWillAppear(animated)
         
         setNotificationToken()
-    }
-    
-    @IBAction func addFriend(_ sender: UIBarButtonItem) {
-        addAndEditFirends(title: "Add",
-                          message: "Add new friend",
-                          placeholder: "Name") {
-        }
     }
     
     private func setFirstLetters() {
@@ -109,25 +102,28 @@ class FriendsTableViewController: UITableViewController {
                 print(error.localizedDescription)
             }
         }
+        tableView.reloadData()
     }
     
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
-        sections.count
+        return sections.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        sections[section].count
+        return sections[section].count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? FriendsTableViewCell else { return UITableViewCell() }
         
         let model = sections[indexPath.section][indexPath.row]
-        
         cell.nameLabel.text = model.firstName + " " + model.lastName
-        cell.avatarImageView.image = networkManager.setPhoto(atIndexPath: indexPath,
-                                                             byUrl: model.avatarURL)
+        //        cell.avatarImageView.image = networkManager.setPhoto(atIndexPath: indexPath,
+        //                                                             byUrl: model.avatarURL)
+        //        cell.avatarImageView.loadImage(fromURL: model.avatarURL)
+        cell.avatarImageView.kf.setImage(with: URL(string: model.avatarURL),
+                                         options: [.transition(.fade(0.5))])
         
         return cell
     }
@@ -149,7 +145,6 @@ class FriendsTableViewController: UITableViewController {
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // Delete the row from the data source
         }
     }
     
@@ -159,12 +154,12 @@ class FriendsTableViewController: UITableViewController {
         guard segue.identifier == "detailFriendsTableViewSegue" else { return }
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
         
-        if let friend = users?[indexPath.row] {
-            let friendsDetailVC = segue.destination as! FriendsDetailCollectionViewController
-            friendsDetailVC.navigationController?.title = friend.firstName + " " + friend.lastName
-            friendsDetailVC.ownerID = friend.id
-            friendsDetailVC.users.append(friend)
-        }
+        let model = sections[indexPath.section][indexPath.row]
+        let friendsDetailVC = segue.destination as! FriendsDetailCollectionViewController
+        friendsDetailVC.navigationController?.title = model.firstName + " " + model.lastName
+        friendsDetailVC.ownerID = model.id
+        friendsDetailVC.users.append(model)
+        
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -218,18 +213,17 @@ extension FriendsTableViewController: UISearchResultsUpdating, UISearchBarDelega
     
     // Вычисляемое свойство, определяющее, фильтруете ли вы в настоящее время результаты или нет
     var isFiltering: Bool {
-        return searchController.isActive && !isSearchBarEmpty
+        return searchController.isActive && !searchBarIsEmpty
     }
     
+    // Вычисляемое свойство, определяющее, пустой ли серчбар или нет
+    var searchBarIsEmpty: Bool {
+        guard let text = searchController.searchBar.text else { return false }
+        return text.isEmpty
+    }
     
-    // filterContentFor(_ searchText: String) фильтрует пользователей на основе searchText и помещает результаты в фильтр filteredUsers
     func filterContentFor(_ searchText: String) {
-        filteredUsers = realm.objects(Friend.self).filter("firstName")
-        
-        //        filteredUsers = friends.filter { users -> Bool in
-        //            return users.firstName.contains(searchText.lowercased())
-        //        }
-        tableView.reloadData()
+        // TODO: Add search methods
     }
     
     // Теперь всякий раз, когда пользователь добавляет или удаляет текст в строке поиска, UISearchController будет информировать класс FriendsTableViewController об изменении посредством вызова updateSearchResults(for:), который, в свою очередь, вызывает filterContentFor(_ searchText:).

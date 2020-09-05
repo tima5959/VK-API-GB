@@ -17,12 +17,13 @@ final class NetworkService {
     private let userID = Session.shared.userId
     private var urlComponents = URLComponents()
     private let scheme = "https"
+    private let vkApiHost = "api.vk.com"
     private let version = "5.122"
     private let autorizeHost = "oauth.vk.com"
-    private let vkApiHost = "api.vk.com"
     
     var images = [String: UIImage]()
     
+    // MARK: - Authorized request
     func getAuthorized() -> URLRequest {
         urlComponents.scheme = scheme
         urlComponents.host = autorizeHost
@@ -41,6 +42,7 @@ final class NetworkService {
         return request
     }
     
+    // MARK: - Fetch friends request
     func getLoadFriends(handler: @escaping ([Friend]) -> Void) {
         urlComponents.scheme = scheme
         urlComponents.host = vkApiHost
@@ -60,18 +62,15 @@ final class NetworkService {
                 print(error.localizedDescription)
                 return
             }
-            
-            guard let data = data else { return }
-            
-            guard let friendsModelData = try? JSONDecoder().decode(Response<Friend>.self, from: data).response.items else { return }
-            
-//                guard let data = friendsModelData else { return }
-                DispatchQueue.main.async {
-                    handler(friendsModelData)
+            guard let data = data,
+                let friendsModelData = try? JSONDecoder().decode(Response<Friend>.self, from: data).response.items else { return }
+            DispatchQueue.main.async {
+                handler(friendsModelData)
             }
         }.resume()
     }
     
+    // MARK: - Fetch communities request
     func getLoadGroups(handler: @escaping ([Groups]) -> Void) {
         urlComponents.scheme = scheme
         urlComponents.host = vkApiHost
@@ -93,28 +92,23 @@ final class NetworkService {
                 return
             }
             
-            guard let data = data else { return }
-            do {
-                let groupsModelData = try? JSONDecoder().decode(Response<Groups>.self, from: data).response.items
-                guard let groups = groupsModelData else { return }
+            guard let data = data,
+                let groups = try? JSONDecoder().decode(Response<Groups>.self, from: data).response.items else { return }
                 DispatchQueue.main.async {
                     handler(groups)
                 }
-            } catch {
-                print(error.localizedDescription)
-            }
         }.resume()
-        
     }
     
+    // MARK: - Find communities request
     func getFindGroups(title forFind: String) {
         urlComponents.scheme = scheme
         urlComponents.host = vkApiHost
         urlComponents.path = "/method/groups.search"
         urlComponents.queryItems = [
-            .init(name: "q", value: "\(forFind)"),
+            .init(name: "q", value: forFind),
             .init(name: "sort", value: "0"),
-            .init(name: "access_token", value: "\(Session.shared.token)"),
+            .init(name: "access_token", value: Session.shared.token),
             .init(name: "v", value: version)
         ]
         
@@ -128,4 +122,63 @@ final class NetworkService {
         }.resume()
     }
     
+    // MARK: - Fetch all photos request
+    func fetchAllPhoto(user id: Int?, _ completionHandler: @escaping ([Photo]) -> Void) {
+        guard let id = id else { return }
+        urlComponents.scheme = scheme
+        urlComponents.host = vkApiHost
+        urlComponents.path = "/method/photos.getAll"
+        urlComponents.queryItems = [
+            .init(name: "owner_id", value: String(id)),
+            .init(name: "extended", value: "0"),
+            .init(name: "photo_sizes", value: "0"),
+            .init(name: "access_token", value: Session.shared.token),
+            .init(name: "v", value: version)
+        ]
+        
+        guard let url = urlComponents.url else { preconditionFailure("fetch all photo is failure") }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+            guard let data = data,
+                let photo = try? JSONDecoder().decode(Response<Photo>.self, from: data).response.items else { return }
+                DispatchQueue.main.async {
+                    completionHandler(photo)
+                }
+        }.resume()
+        
+    }
+    
+    // MARK: - Fetch all photos request
+    func findGroups(_ text: String, completionHandler: @escaping ([Groups]) -> Void) {
+        urlComponents.scheme = scheme
+        urlComponents.host = vkApiHost
+        urlComponents.path = "/method/groups.search"
+        urlComponents.queryItems = [
+            .init(name: "q", value: text),
+            .init(name: "type", value: "group"),
+            .init(name: "sort", value: "0"),
+            .init(name: "access_token", value: Session.shared.token),
+            .init(name: "v", value: version)
+        ]
+        
+        guard let url = urlComponents.url else { preconditionFailure("group search error \(#function) \(#file)")}
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print(error)
+                return
+            }
+            
+            guard let data = data, let groups = try? JSONDecoder().decode(Response<Groups>.self, from: data).response.items else { return }
+            DispatchQueue.main.async {
+                completionHandler(groups)
+            }
+        }.resume()
+    }
 }

@@ -7,71 +7,48 @@
 //
 
 import UIKit
+import Kingfisher
 
 private let reuseIdentifier = "friendsCollectionItem"
 
 class FriendsDetailCollectionViewController: UICollectionViewController {
     
+    let network = NetworkService()
+    
     var users: [Friend] = []
-    var images: [UIImage] = []
+    var images: [Photo] = []
     var ownerID: Int? = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        collectionView.isPagingEnabled = true
-        
-        let session = URLSession(configuration: .default)
-        
-        let userID = Session.shared.userId
-        var urlComponents = URLComponents()
-        let scheme = "https"
-        let version = "5.122"
-        let vkApiHost = "api.vk.com"
-        
-        guard let owners = ownerID else { return }
-        urlComponents.scheme = scheme
-        urlComponents.host = vkApiHost
-        urlComponents.path = "/method/photos.getAll"
-        urlComponents.queryItems = [
-            .init(name: "user_ids", value: "\(userID)"),
-            .init(name: "owner_id", value: String(owners)),
-            .init(name: "extended", value: "1"),
-            .init(name: "photo_sizes", value: "1"),
-            .init(name: "access_token", value: Session.shared.token),
-            .init(name: "v", value: version),
-        ]
-        guard let url = urlComponents.url else { return }
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        session.dataTask(with: request) { data, response, error in
-//            let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-//            print(json ?? "")
-            if let data = data, let images = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    self.images.append(images)
-                }
-            }
+        network.fetchAllPhoto(user: ownerID) { (photos) in
+            self.images = photos
             
-        }.resume()
+            self.collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
     }
     
     // MARK: - UICollectionViewDataSource
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-        return users.count
+        return images.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! FriendsDetailCollectionViewCell
         
-//        cell.friendsPhotos.image = images[indexPath.row]
+        let image = images[indexPath.item]
+        
+//        cell.friendsPhotos.image = network.setPhoto(atIndexPath: indexPath, byUrl: image.sizes.last?.url ?? "")
+        cell.friendsPhotos.kf.setImage(with: URL(string: image.sizes.last?.url ?? ""), options: [.transition(.flipFromRight(0.5))])
         
         return cell
     }

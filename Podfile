@@ -7,5 +7,6 @@ target 'VKApi' do
 
   # Pods for VKApi
 pod 'RealmSwift'	
+pod 'Kingfisher'
 
 end

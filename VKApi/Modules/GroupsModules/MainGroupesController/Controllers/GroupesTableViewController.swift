@@ -8,24 +8,22 @@
 
 import UIKit
 import RealmSwift
+import Kingfisher
 
 class GroupesTableViewController: UITableViewController {
     
     // Значение nil, говорит что результаты поиска будут отображены на самом Контроллере
     // Если мы хотим показывать результаты на другом контроллере, то вместо nil нужно установить другой контроллер
     let searchController = UISearchController(searchResultsController: nil)
-   
+    
     private let storageManager = RealmService()
     private let networkService = NetworkService()
     private var notificationToken: NotificationToken?
     private var model: Results<Groups>?
-    private var groups: [Groups] = [Groups]()
-    
+    private var groups: [Groups] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         
         let refreshControll = UIRefreshControl()
         refreshControll.addTarget(self,
@@ -62,12 +60,11 @@ class GroupesTableViewController: UITableViewController {
         
         networkService.getLoadGroups(handler: { [weak self] community in
             self?.groups = community
+            self?.tableView.reloadData()
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
             }
         })
-        
-        
     }
     
     func setNotificationToken() {
@@ -96,16 +93,14 @@ class GroupesTableViewController: UITableViewController {
             }
             self?.tableView.refreshControl?.endRefreshing()
         })
-        
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        groups.count
+        return groups.count
     }
     
     
@@ -114,30 +109,26 @@ class GroupesTableViewController: UITableViewController {
         
         let group = groups[indexPath.row]
         cell.groupNamedLabel.text = group.name
-        cell.imageViewOutlet.image = networkService.setPhoto(atIndexPath: indexPath, byUrl: group.avatarURL)
+//        cell.imageViewOutlet.image = networkService.setPhoto(atIndexPath: indexPath, byUrl: group.avatarURL)
+        cell.imageViewOutlet.kf.setImage(with: URL(string: group.avatarURL), options: [
+            .transition(.flipFromLeft(0.6))
+        ])
         
         return cell
     }
     
-    // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
         return true
     }
     
-    // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+       
+        }
     }
 }
 
 extension GroupesTableViewController: UISearchResultsUpdating {
-    
     // isSearchBarEmpty возвращает true, если текст, введенный в строке поиска, пуст; в противном случае возвращается false.
     var isSearchBarEmpty: Bool {
         return searchController.searchBar.text?.isEmpty ?? true
@@ -150,13 +141,12 @@ extension GroupesTableViewController: UISearchResultsUpdating {
     
     // filterContentFor(_ searchText: String) фильтрует группы на основе searchText и помещает результаты в фильтр filteredGroups
     func filterContentFor(_ searchText: String) {
-//        if searchText.isEmpty == false {
-//            let searchGroupRequest = NetworkService.shared.getFindGroups(title: searchText)
-//            print(searchGroupRequest)
-//        }
-//        filteredGroups = model.filter { groups -> Bool in
-//            return groups.lowercased().contains(searchText.lowercased())
-//        }
+        networkService.findGroups(searchText) { [weak self] communities in
+            self?.groups = communities
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        }
         tableView.reloadData()
     }
     

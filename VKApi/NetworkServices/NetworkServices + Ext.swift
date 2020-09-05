@@ -9,7 +9,7 @@
 import UIKit
 
 extension NetworkService {
-    
+    // MARK: - Fetch photos request
     private func fetchPhoto(_ url: String) {
         guard let urlRequest = URL(string: url) else { return }
         let request = URLRequest(url: urlRequest)

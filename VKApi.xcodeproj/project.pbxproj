@@ -14,6 +14,7 @@
 		B52EE8E424E5E29E00176EAA /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B52EE8E324E5E29E00176EAA /* WebKit.framework */; };
 		B53FB72D24CF5CDA0009977E /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53FB72C24CF5CDA0009977E /* Extension.swift */; };
 		B550E32924EEF50600C42755 /* RealmService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B550E32824EEF50600C42755 /* RealmService.swift */; };
+		B569877524FBDFEE009933D1 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B569877424FBDFEE009933D1 /* Photo.swift */; };
 		B5B69AF924CC85A600E9B552 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B69AF824CC85A600E9B552 /* AppDelegate.swift */; };
 		B5B69AFB24CC85A600E9B552 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B69AFA24CC85A600E9B552 /* SceneDelegate.swift */; };
 		B5B69AFD24CC85A600E9B552 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B69AFC24CC85A600E9B552 /* ViewController.swift */; };
@@ -45,6 +46,7 @@
 		B52EE8E324E5E29E00176EAA /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		B53FB72C24CF5CDA0009977E /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		B550E32824EEF50600C42755 /* RealmService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmService.swift; sourceTree = "<group>"; };
+		B569877424FBDFEE009933D1 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		B5B69AF524CC85A600E9B552 /* VKApi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VKApi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5B69AF824CC85A600E9B552 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B5B69AFA24CC85A600E9B552 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -108,6 +110,32 @@
 				B550E32824EEF50600C42755 /* RealmService.swift */,
 			);
 			path = StorageManager;
+			sourceTree = "<group>";
+		};
+		B569877124FBDAF7009933D1 /* DetailCollectionVIew */ = {
+			isa = PBXGroup;
+			children = (
+				B569877224FBDB10009933D1 /* Model */,
+				B569877324FBDB17009933D1 /* View */,
+			);
+			path = DetailCollectionVIew;
+			sourceTree = "<group>";
+		};
+		B569877224FBDB10009933D1 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B569877424FBDFEE009933D1 /* Photo.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		B569877324FBDB17009933D1 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B5DAC13924CDE8720081C6E2 /* FriendsDetailCollectionViewController.swift */,
+				B5DAC14024CDE8F00081C6E2 /* FriendsDetailCollectionViewCell.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		B57AF11024E864F700D8D7F7 /* AuthorizesModules */ = {
@@ -178,7 +206,7 @@
 			isa = PBXGroup;
 			children = (
 				B5DAC13C24CDE8970081C6E2 /* MainTableView */,
-				B5DAC13D24CDE8A70081C6E2 /* DetailCollectionView */,
+				B569877124FBDAF7009933D1 /* DetailCollectionVIew */,
 			);
 			path = FriendsModules;
 			sourceTree = "<group>";
@@ -187,18 +215,9 @@
 			isa = PBXGroup;
 			children = (
 				B5EA885E24E9744A002C13E0 /* Model */,
-				B5EA885D24E9743C002C13E0 /* Controllers */,
+				B5EA885D24E9743C002C13E0 /* View */,
 			);
 			path = MainTableView;
-			sourceTree = "<group>";
-		};
-		B5DAC13D24CDE8A70081C6E2 /* DetailCollectionView */ = {
-			isa = PBXGroup;
-			children = (
-				B5DAC13924CDE8720081C6E2 /* FriendsDetailCollectionViewController.swift */,
-				B5DAC14024CDE8F00081C6E2 /* FriendsDetailCollectionViewCell.swift */,
-			);
-			path = DetailCollectionView;
 			sourceTree = "<group>";
 		};
 		B5DAC14224CDE8FA0081C6E2 /* GroupsModules */ = {
@@ -228,13 +247,13 @@
 			path = MainGroupesController;
 			sourceTree = "<group>";
 		};
-		B5EA885D24E9743C002C13E0 /* Controllers */ = {
+		B5EA885D24E9743C002C13E0 /* View */ = {
 			isa = PBXGroup;
 			children = (
 				B5DAC13724CDE83B0081C6E2 /* FriendsTableViewController.swift */,
 				B5DAC13E24CDE8DC0081C6E2 /* FriendsTableViewCell.swift */,
 			);
-			path = Controllers;
+			path = View;
 			sourceTree = "<group>";
 		};
 		B5EA885E24E9744A002C13E0 /* Model */ = {
@@ -411,6 +430,7 @@
 				B5DAC14124CDE8F00081C6E2 /* FriendsDetailCollectionViewCell.swift in Sources */,
 				B5DAC13F24CDE8DC0081C6E2 /* FriendsTableViewCell.swift in Sources */,
 				B5B69AFB24CC85A600E9B552 /* SceneDelegate.swift in Sources */,
+				B569877524FBDFEE009933D1 /* Photo.swift in Sources */,
 				B5DAC14624CDE96C0081C6E2 /* GroupesTableViewController.swift in Sources */,
 				B550E32924EEF50600C42755 /* RealmService.swift in Sources */,
 				B5DAC14A24CDE98B0081C6E2 /* DetailTableViewCell.swift in Sources */,
