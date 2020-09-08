@@ -118,7 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				B569877224FBDB10009933D1 /* Model */,
-				B569877324FBDB17009933D1 /* View */,
+				B5A4B5072508073C000A08F6 /* Views */,
 			);
 			path = DetailCollectionVIew;
 			sourceTree = "<group>";
@@ -129,15 +129,6 @@
 				B569877424FBDFEE009933D1 /* Photo.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		B569877324FBDB17009933D1 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				B5DAC13924CDE8720081C6E2 /* FriendsDetailCollectionViewController.swift */,
-				B5DAC14024CDE8F00081C6E2 /* FriendsDetailCollectionViewCell.swift */,
-			);
-			path = View;
 			sourceTree = "<group>";
 		};
 		B57AF11024E864F700D8D7F7 /* AuthorizesModules */ = {
@@ -155,6 +146,15 @@
 				B5C51FB92504F0D80028671B /* NewsFeedModel.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		B5A4B5072508073C000A08F6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B5DAC13924CDE8720081C6E2 /* FriendsDetailCollectionViewController.swift */,
+				B5DAC14024CDE8F00081C6E2 /* FriendsDetailCollectionViewCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		B5B69AEC24CC85A600E9B552 = {
