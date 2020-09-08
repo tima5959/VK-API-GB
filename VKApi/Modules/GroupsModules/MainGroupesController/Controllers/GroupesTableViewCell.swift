@@ -10,7 +10,15 @@ import UIKit
 
 class GroupesTableViewCell: UITableViewCell {
     
-    @IBOutlet weak var imageViewOutlet: UIImageView!
+    @IBOutlet weak var imageViewOutlet: UIImageView! {
+        didSet {
+            let gesture = UITapGestureRecognizer(target: self,
+                                                 action: #selector(tapToImage))
+            imageViewOutlet.addGestureRecognizer(gesture)
+            imageViewOutlet.isUserInteractionEnabled = true
+            imageViewOutlet.layer.cornerRadius = imageViewOutlet.frame.width / 2
+        }
+    }
     @IBOutlet weak var groupNamedLabel: UILabel!
     @IBOutlet weak var groupTypeLabel: UILabel!
     
@@ -18,10 +26,6 @@ class GroupesTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        let gesture = UITapGestureRecognizer(target: self,
-                                             action: #selector(tapToImage))
-        imageViewOutlet.addGestureRecognizer(gesture)
-        imageViewOutlet.isUserInteractionEnabled = true
         
     }
     

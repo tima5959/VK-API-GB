@@ -32,7 +32,7 @@ final class NetworkService {
             .init(name: "client_id", value: "7566637"),
             .init(name: "display", value: "mobile"),
             .init(name: "redirect_uri", value: "https://oauth.vk.com/blank.html"),
-            .init(name: "scope", value: "262150"),
+            .init(name: "scope", value: "401502"),
             .init(name: "response_type", value: "token"),
             .init(name: "v", value: version)
         ]
@@ -100,28 +100,7 @@ final class NetworkService {
         }.resume()
     }
     
-    // MARK: - Find communities request
-    func getFindGroups(title forFind: String) {
-        urlComponents.scheme = scheme
-        urlComponents.host = vkApiHost
-        urlComponents.path = "/method/groups.search"
-        urlComponents.queryItems = [
-            .init(name: "q", value: forFind),
-            .init(name: "sort", value: "0"),
-            .init(name: "access_token", value: Session.shared.token),
-            .init(name: "v", value: version)
-        ]
-        
-        guard let url = urlComponents.url else { preconditionFailure("findGroups network methods is failure") }
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        
-        session.dataTask(with: request) { data, response, error in
-            let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-            print(json ?? "")
-        }.resume()
-    }
-    
+
     // MARK: - Fetch all photos request
     func fetchAllPhoto(user id: Int?, _ completionHandler: @escaping ([Photo]) -> Void) {
         guard let id = id else { return }
@@ -179,6 +158,67 @@ final class NetworkService {
             DispatchQueue.main.async {
                 completionHandler(groups)
             }
+        }.resume()
+    }
+    
+    // MARK: - Find communities request
+    func getFindGroups(title forFind: String) {
+        urlComponents.scheme = scheme
+        urlComponents.host = vkApiHost
+        urlComponents.path = "/method/groups.search"
+        urlComponents.queryItems = [
+            .init(name: "q", value: forFind),
+            .init(name: "sort", value: "0"),
+            .init(name: "access_token", value: Session.shared.token),
+            .init(name: "v", value: version)
+        ]
+        
+        guard let url = urlComponents.url else { preconditionFailure("findGroups network methods is failure") }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        session.dataTask(with: request) { data, response, error in
+            let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments)
+            print(json ?? "")
+        }.resume()
+    }
+    
+    // MARK: - Find communities request
+    func getNews(_ completionHandler: @escaping ([NewsFeedModel]) -> Void) {
+        urlComponents.scheme = scheme
+        urlComponents.host = vkApiHost
+        urlComponents.path = "/method/newsfeed.get"
+        urlComponents.queryItems = [
+            .init(name: "start_from", value: "next_from"),
+            .init(name: "filters", value: "post"),
+            .init(name: "max_photos", value: "0"),
+            .init(name: "count", value: "20"),
+            .init(name: "access_token", value: Session.shared.token),
+            .init(name: "v", value: version)
+        ]
+        
+        guard let url = urlComponents.url else {
+            return
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            
+            guard let data = data,
+                let news = try? JSONDecoder().decode(Response<NewsFeedModel>.self, from: data).response.items else { return }
+//            let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
+//            print(json ?? "new not found")
+            
+            DispatchQueue.main.async {
+                completionHandler(news)
+//                dump(news)
+            }
+            
+          
         }.resume()
     }
 }

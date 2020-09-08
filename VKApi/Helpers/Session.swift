@@ -13,6 +13,4 @@ class Session {
     
     var token: String = ""
     let userId: Int = 0
-    
-    
 }

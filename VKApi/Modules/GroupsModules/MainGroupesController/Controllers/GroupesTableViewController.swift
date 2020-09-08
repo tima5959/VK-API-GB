@@ -84,7 +84,6 @@ class GroupesTableViewController: UITableViewController {
     }
     
     // MARK: - Table view data source
-    
     @objc func refreshFunc() {
         networkService.getLoadGroups(handler: { [weak self] community in
             self?.groups = community
@@ -103,7 +102,6 @@ class GroupesTableViewController: UITableViewController {
         return groups.count
     }
     
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "groupMainCell", for: indexPath) as! GroupesTableViewCell
         
@@ -111,7 +109,7 @@ class GroupesTableViewController: UITableViewController {
         cell.groupNamedLabel.text = group.name
 //        cell.imageViewOutlet.image = networkService.setPhoto(atIndexPath: indexPath, byUrl: group.avatarURL)
         cell.imageViewOutlet.kf.setImage(with: URL(string: group.avatarURL), options: [
-            .transition(.flipFromLeft(0.6))
+            .transition(.fade(0.5))
         ])
         
         return cell

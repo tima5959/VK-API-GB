@@ -19,20 +19,23 @@ class RealmService {
     }
         
     func fetchFriends(updatePolicy: Realm.UpdatePolicy = .modified) {
-        networking?.getLoadFriends { data in
-            do {
-                let realm = try Realm()
-                try realm.write {
-                    realm.add(data, update: updatePolicy)
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.networking?.getLoadFriends { data in
+                do {
+                    let realm = try Realm()
+                    try realm.write {
+                        realm.add(data, update: updatePolicy)
+                    }
+                } catch let error {
+                    print(error.localizedDescription)
                 }
-            } catch let error {
-                print(error.localizedDescription)
             }
         }
     }
     
     func fetchGroups(updatePolicy: Realm.UpdatePolicy = .modified) {
-        networking?.getLoadGroups { data in
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.networking?.getLoadGroups { data in
             do {
                 let realm = try Realm()
                 try realm.write {
@@ -40,6 +43,7 @@ class RealmService {
                 }
             } catch let error {
                 print(error.localizedDescription)
+                }
             }
         }
     }
@@ -47,24 +51,21 @@ class RealmService {
     func saveInRealm<T: Object>(items: [T],
                                        config: Realm.Configuration = Realm.Configuration.defaultConfiguration,
                                        updatePolicy: Realm.UpdatePolicy = .modified) {
-        
-        NetworkService.shared.getLoadFriends { friend in
-            do {
-                let realm = try Realm(configuration: self.deleteIfMigration)
-                try realm.write {
-                    realm.add(items, update: updatePolicy)
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.networking?.getLoadFriends { friend in
+                do {
+                    let realm = try Realm(configuration: self.deleteIfMigration)
+                    try realm.write {
+                        realm.add(items, update: updatePolicy)
+                    }
+                } catch {
+                    print(error)
                 }
-                
-            } catch {
-                print(error)
             }
         }
     }
     
-    func fetchByRealm<T: Object>(
-        items: T.Type,
-        config: Realm.Configuration = Realm.Configuration.defaultConfiguration
-    ) throws -> Results<T> {
+    func fetchByRealm<T: Object>(items: T.Type, config: Realm.Configuration = Realm.Configuration.defaultConfiguration) throws -> Results<T> {
         let realm = try Realm(configuration: self.deleteIfMigration)
         return realm.objects(items)
     }

@@ -34,7 +34,6 @@ class FriendsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         setNotificationToken()
         
         self.navigationItem.rightBarButtonItem = self.editButtonItem
@@ -192,8 +191,7 @@ extension FriendsTableViewController {
         }
         
         let cancelAction = UIAlertAction(title: "Cancel",
-                                         style: .destructive,
-                                         handler: nil)
+                                         style: .destructive)
         
         alert.addAction(cancelAction)
         alert.addAction(saveAction)

@@ -10,11 +10,21 @@ import UIKit
 
 class FriendsTableViewCell: UITableViewCell {
     
-    @IBOutlet weak var avatarImageView: UIImageView!
+    @IBOutlet weak var avatarImageView: UIImageView! {
+        didSet {
+            
+        }
+    }
     @IBOutlet weak var nameLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        // shadow
+        avatarImageView.layer.shadowColor = UIColor.black.cgColor
+        avatarImageView.layer.shadowOffset = CGSize(width: 3, height: 3)
+        avatarImageView.layer.shadowOpacity = 0.7
+        avatarImageView.layer.shadowRadius = 4.0
         
         let tap = UITapGestureRecognizer()
         tap.addTarget(self, action: #selector(tapOnAvatar))

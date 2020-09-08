@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import Kingfisher
 
 class NewsTableViewCell: UITableViewCell {
+    
+    private var groups: [Groups] = []
     
     let numberOfRows = 1
     let columns: CGFloat = 1.0
@@ -16,94 +19,61 @@ class NewsTableViewCell: UITableViewCell {
     let spacing: CGFloat = 8.0
     let lineSpacing: CGFloat = 8.0
     
-    var imageArray = [String] ()
-    
     var isLiked = false
     
-    @IBOutlet weak var newsTitleText: UILabel!
-    @IBOutlet weak var likeCountTitle: UILabel! {
-        didSet {
-            if isLiked == true {
-                likeCountTitle.text = "1"
-            } else {
-                likeCountTitle.text = "0"
-            }
-        }
-    }
+    @IBOutlet weak var avatarImageView: UIImageView! // Аватар новости
+    @IBOutlet weak var titleNewsFeed: UILabel! // Название автора новости
+    @IBOutlet weak var lastOnlineTime: UILabel! // Последнее время онлайн
     
-    @IBOutlet weak var shareCountTitle: UILabel!
-    @IBOutlet weak var viewsCountTitle: UILabel!
+    @IBOutlet weak var newsTitleText: UILabel! // Основной текст поста
+    @IBOutlet weak var likeCountTitle: UILabel! // Количество лайков
+    @IBOutlet weak var shareCountTitle: UILabel! // Количество репостов
+    @IBOutlet weak var viewsCountTitle: UILabel! // Количество просмотров
     
-    
-    @IBOutlet weak var heartLikeTitle: UIButton!
-    
-    @IBOutlet weak var likeTitleAction: UIStackView!
-    
-    @IBOutlet weak var shareTitleAction: UIStackView!
-    @IBOutlet weak var animateImageView: UIImageView!
+    @IBOutlet weak var heartLikeTitle: UIButton! // Кнопка лайка
+    @IBOutlet weak var likeTitleAction: UIStackView! // Стек кнопки лайка и лейбла количества лайков
+    @IBOutlet weak var shareTitleAction: UIStackView! // Стек кнопки репоста и лейбла количества репостов
+    @IBOutlet weak var animateImageView: UIImageView! // Имедж вью
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        imageArray = [
-            "photollllll",
-            "photollllll",
-            "photollllll",
-            "photollllll",
-            "photollllll",
-            "photollllll"
-        ]
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(tapToImage))
         animateImageView.addGestureRecognizer(gesture)
         animateImageView.isUserInteractionEnabled = true
-        
     }
     
     @IBAction func likeHeartAction(_ sender: UIButton) {
         isLiked.toggle()
         likeCountTitle.isUserInteractionEnabled = true
         if isLiked == true {
-            likeCountTitle.text = "1"
             UIView.animate(withDuration: 0.5) {
                 self.heartLikeTitle.tintColor = .red
                 self.heartLikeTitle.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
                 self.heartLikeTitle.transform = CGAffineTransform(rotationAngle: .pi)
-//                self.heartLikeTitle.center.x += 200
                 self.heartLikeTitle.transform = .identity
             }
-            
-            let center = CABasicAnimation(keyPath: "center.x")
-            center.toValue = 200
-            
-            let animationGroup = CAAnimationGroup()
-            animationGroup.duration = 1
-            animationGroup.fillMode = .forwards
-            animationGroup.animations = [center]
-            heartLikeTitle.layer.add(animationGroup, forKey: nil)
         } else {
-            self.heartLikeTitle.tintColor = .blue
-            UIView.animateKeyframes(withDuration: 2,
-                                    delay: 0,
-                                    options: .autoreverse,
-                                    animations: {
-                                        UIView.addKeyframe(
-                                            withRelativeStartTime: 0,
-                                            relativeDuration: 0.25) {
-                                                self.heartLikeTitle.center.x += 40
-                                        }
-                                        
-                                        UIView.addKeyframe(
-                                            withRelativeStartTime: 0.20,
-                                            relativeDuration: 1) {
-                                                self.heartLikeTitle.transform = CGAffineTransform(scaleX: 0.5,
-                                                                                                  y: 0.5)
-                                                
-                                        }
-                                        self.heartLikeTitle.transform = .identity
-            },
-                                    completion: nil)
-            likeCountTitle.text = "0"
+            UIView.animate(withDuration: 0.5) {
+                self.heartLikeTitle.tintColor = .blue
+                self.heartLikeTitle.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+                self.heartLikeTitle.transform = CGAffineTransform(rotationAngle: .pi)
+                self.heartLikeTitle.transform = .identity
+            }
         }
+    }
+    
+    func configure(_ data: [NewsFeedModel], at indexPath: IndexPath) -> Void {
+        let news = data[indexPath.row]
+        
+        animateImageView.kf.setImage(with: URL(string: news.attachments?.first?.photo?.sizes?.last?.url ?? ""))
+        
+        lastOnlineTime.text = String("\(news.date)")
+        
+        newsTitleText.text = news.text
+        likeCountTitle.text = String("\(news.likes.count)")
+        shareCountTitle.text = String("\(news.reposts.count)")
+        viewsCountTitle.text = String("\(news.views.count)")
     }
     
     @objc func tapToImage() {
@@ -113,8 +83,7 @@ class NewsTableViewCell: UITableViewCell {
                        initialSpringVelocity: 1,
                        options: [.autoreverse],
                        animations: { [unowned self] in
-                        let scale = CGAffineTransform(scaleX: 0.5, y: 0.5)
-                        self.animateImageView.transform = scale
+                        self.animateImageView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
         }) { [unowned self] _ in
             self.animateImageView.transform = .identity
         }
