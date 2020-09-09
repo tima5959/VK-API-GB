@@ -12,7 +12,7 @@ import Kingfisher
 private let reuseIdentifier = "friendsCollectionItem"
 
 class FriendsDetailCollectionViewController: UICollectionViewController {
-
+    
     let network = NetworkService()
     
     var users: [Friend] = []
@@ -23,21 +23,20 @@ class FriendsDetailCollectionViewController: UICollectionViewController {
         super.viewDidLoad()
         
         DispatchQueue.global(qos: .userInitiated).async {
-            self.network.fetchAllPhoto(user: self.ownerID) { [weak self] photos in
-                self?.images = photos
-                
+            self.network.fetchAllPhoto(user: self.ownerID, { [weak self] photo in
+                self?.images = photo
                 DispatchQueue.main.async {
                     self?.collectionView.reloadData()
-                    if self?.images.count == 0 {
-                        let alert = UIAlertController(title: "Photo not found",
-                                                      message: "User has no photos",
-                                                      preferredStyle: .alert)
-                        
-                        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-                        alert.addAction(cancelAction)
-                        self?.present(alert, animated: true)
-                    }
                 }
+            }) { [unowned self] error in
+                guard let error = error else { return }
+                let alert = UIAlertController(title: "Photo not found",
+                                              message: error,
+                                              preferredStyle: .alert)
+                
+                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+                alert.addAction(cancelAction)
+                self.present(alert, animated: true)
             }
         }
     }
@@ -57,7 +56,7 @@ class FriendsDetailCollectionViewController: UICollectionViewController {
         
         let image = images[indexPath.item]
         
-//        cell.friendsPhotos.image = network.setPhoto(atIndexPath: indexPath, byUrl: image.sizes.last?.url ?? "")
+        //        cell.friendsPhotos.image = network.setPhoto(atIndexPath: indexPath, byUrl: image.sizes.last?.url ?? "")
         cell.friendsPhotos.kf.setImage(with: URL(string: image.sizes.last?.url ?? ""), options: [])
         
         return cell

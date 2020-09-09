@@ -94,15 +94,15 @@ final class NetworkService {
             
             guard let data = data,
                 let groups = try? JSONDecoder().decode(Response<Groups>.self, from: data).response.items else { return }
-                DispatchQueue.main.async {
-                    handler(groups)
-                }
+            DispatchQueue.main.async {
+                handler(groups)
+            }
         }.resume()
     }
     
-
+    
     // MARK: - Fetch all photos request
-    func fetchAllPhoto(user id: Int?, _ completionHandler: @escaping ([Photo]) -> Void) {
+    func fetchAllPhoto(user id: Int?, _ completionHandler: @escaping ([Photo]) -> Void, _ completionError: @escaping (String?) -> Void) {
         guard let id = id else { return }
         urlComponents.scheme = scheme
         urlComponents.host = vkApiHost
@@ -118,15 +118,19 @@ final class NetworkService {
         guard let url = urlComponents.url else { preconditionFailure("fetch all photo is failure") }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        session.dataTask(with: request) { data, response, error in
+        session.dataTask(with: request) { data, _, error in
             if let error = error {
                 print(error.localizedDescription)
             }
-            guard let data = data,
-                let photo = try? JSONDecoder().decode(Response<Photo>.self, from: data).response.items else { return }
+            guard let data = data else { return }
+            do {
+                let photo = try JSONDecoder().decode(Response<Photo>.self, from: data).response.items
                 DispatchQueue.main.async {
                     completionHandler(photo)
                 }
+            } catch let error {
+                completionError(error.localizedDescription)
+            }
         }.resume()
         
     }
@@ -210,15 +214,15 @@ final class NetworkService {
             
             guard let data = data,
                 let news = try? JSONDecoder().decode(Response<NewsFeedModel>.self, from: data).response.items else { return }
-//            let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
-//            print(json ?? "new not found")
+            //            let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
+            //            print(json ?? "new not found")
             
             DispatchQueue.main.async {
                 completionHandler(news)
-//                dump(news)
+                //                dump(news)
             }
             
-          
+            
         }.resume()
     }
 }
