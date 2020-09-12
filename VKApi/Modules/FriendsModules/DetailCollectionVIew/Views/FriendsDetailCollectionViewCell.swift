@@ -17,9 +17,7 @@ class FriendsDetailCollectionViewCell: UICollectionViewCell {
             friendsPhotos.layer.shadowOffset = CGSize.zero
             friendsPhotos.layer.shadowOpacity = 0.8
             friendsPhotos.layer.shadowRadius = 8
+            
         }
     }
-    
-    @IBOutlet weak var nameOutlet: UILabel!
-    
 }

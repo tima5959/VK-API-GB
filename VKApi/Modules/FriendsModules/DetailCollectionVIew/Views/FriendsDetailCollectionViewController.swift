@@ -22,7 +22,7 @@ class FriendsDetailCollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global().async {
             self.network.fetchAllPhoto(user: self.ownerID, { [weak self] photo in
                 self?.images = photo
                 DispatchQueue.main.async {

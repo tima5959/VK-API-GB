@@ -13,23 +13,41 @@ class NewsViewController: UITableViewController {
     private let network = NetworkService()
     private var model: [NewsFeedModel] = []
     
+    private let customRefreshControll = UIRefreshControl()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         tableView.estimatedRowHeight = UITableView.automaticDimension
         tableView.rowHeight = UITableView.automaticDimension
         
+        customRefreshControll.addTarget(self, action: #selector(getter: refreshControl), for: .allEvents)
+        tableView.refreshControl = customRefreshControll
+        
+        fetchNews()
+    }
+    
+    private func fetchNews() {
         DispatchQueue.global().async {
-            self.network.getNews { [weak self] (news) in
-                self?.model = news
+            self.network.getNews({ [weak self] (news) in
+                guard let self = self else { return }
+                self.model = news
                 DispatchQueue.main.async {
-                    self?.tableView.reloadData()
+                    self.tableView.reloadData()
+                    self.tableView.refreshControl?.endRefreshing()
+                }
+            }) { [unowned self] _ in
+                DispatchQueue.main.async {
+                    self.tableView.refreshControl?.endRefreshing()
                 }
             }
         }
+    }
+    
+    @objc func refreshControllAction() {
+        fetchNews()
     }
     
     // MARK: - Table view data source
@@ -48,6 +66,7 @@ class NewsViewController: UITableViewController {
         
         return cell
     }
+    
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension

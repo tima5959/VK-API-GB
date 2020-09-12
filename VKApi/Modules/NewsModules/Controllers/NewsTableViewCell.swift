@@ -13,30 +13,35 @@ class NewsTableViewCell: UITableViewCell {
     
     private var groups: [Groups] = []
     
-    let numberOfRows = 1
-    let columns: CGFloat = 1.0
-    let inset: CGFloat = 8.0
-    let spacing: CGFloat = 8.0
-    let lineSpacing: CGFloat = 8.0
+    private let numberOfRows = 1
+    private let columns: CGFloat = 1.0
+    private let inset: CGFloat = 8.0
+    private let spacing: CGFloat = 8.0
+    private let lineSpacing: CGFloat = 8.0
     
     var isLiked = false
     
-    @IBOutlet weak var avatarImageView: UIImageView! // Аватар новости
-    @IBOutlet weak var titleNewsFeed: UILabel! // Название автора новости
-    @IBOutlet weak var lastOnlineTime: UILabel! // Последнее время онлайн
+    @IBOutlet weak var avatarImageView: UIImageView!  // Аватар новости
+    @IBOutlet weak var titleNewsFeed: UILabel!        // Название автора новости
+    @IBOutlet weak var lastOnlineTime: UILabel!       // Последнее время онлайн
     
-    @IBOutlet weak var newsTitleText: UILabel! // Основной текст поста
-    @IBOutlet weak var likeCountTitle: UILabel! // Количество лайков
-    @IBOutlet weak var shareCountTitle: UILabel! // Количество репостов
-    @IBOutlet weak var viewsCountTitle: UILabel! // Количество просмотров
+    @IBOutlet weak var newsTitleText: UILabel!        // Основной текст поста
+    @IBOutlet weak var likeCountTitle: UILabel!       // Количество лайков
+    @IBOutlet weak var shareCountTitle: UILabel!      // Количество репостов
+    @IBOutlet weak var viewsCountTitle: UILabel!      // Количество просмотров
     
-    @IBOutlet weak var heartLikeTitle: UIButton! // Кнопка лайка
-    @IBOutlet weak var likeTitleAction: UIStackView! // Стек кнопки лайка и лейбла количества лайков
+    @IBOutlet weak var heartLikeTitle: UIButton!      // Кнопка лайка
+    
+    // TODO: Заменить стеки на контролы
+    @IBOutlet weak var likeTitleAction: UIStackView!  // Стек кнопки лайка и лейбла количества лайков
     @IBOutlet weak var shareTitleAction: UIStackView! // Стек кнопки репоста и лейбла количества репостов
+    // TODO: Заменить ИмеджВью на КоллекшнВью
     @IBOutlet weak var animateImageView: UIImageView! // Имедж вью
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(tapToImage))
         animateImageView.addGestureRecognizer(gesture)
@@ -63,19 +68,6 @@ class NewsTableViewCell: UITableViewCell {
         }
     }
     
-    func configure(_ data: [NewsFeedModel], at indexPath: IndexPath) -> Void {
-        let news = data[indexPath.row]
-        
-        animateImageView.kf.setImage(with: URL(string: news.attachments?.first?.photo?.sizes?.last?.url ?? ""))
-        
-        lastOnlineTime.text = String("\(news.date)")
-        
-        newsTitleText.text = news.text
-        likeCountTitle.text = String("\(news.likes.count)")
-        shareCountTitle.text = String("\(news.reposts.count)")
-        viewsCountTitle.text = String("\(news.views.count)")
-    }
-    
     @objc func tapToImage() {
         UIView.animate(withDuration: 1,
                        delay: 0,
@@ -87,6 +79,19 @@ class NewsTableViewCell: UITableViewCell {
         }) { [unowned self] _ in
             self.animateImageView.transform = .identity
         }
+    }
+    
+    func configure(_ data: [NewsFeedModel], at indexPath: IndexPath) -> Void {
+        let news = data[indexPath.row]
+        
+        animateImageView.kf.setImage(with: URL(string: news.attachments?.first?.photo?.sizes?.last?.url ?? ""))
+        
+        newsTitleText.text = news.text
+        likeCountTitle.text = String("\(news.likes.count)")
+        shareCountTitle.text = String("\(news.reposts.count)")
+        viewsCountTitle.text = String("\(news.views.count)")
+            
+        lastOnlineTime.text = news.publicationTime(timeIntervalSince1970: news.date)
     }
 }
 

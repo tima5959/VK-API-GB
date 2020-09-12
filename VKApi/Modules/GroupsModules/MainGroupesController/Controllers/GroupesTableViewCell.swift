@@ -19,15 +19,9 @@ class GroupesTableViewCell: UITableViewCell {
             imageViewOutlet.layer.cornerRadius = imageViewOutlet.frame.width / 2
         }
     }
+    
     @IBOutlet weak var groupNamedLabel: UILabel!
     @IBOutlet weak var groupTypeLabel: UILabel!
-    
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-        
-    }
     
     @objc func tapToImage() {
         UIView.animate(withDuration: 0.3,
@@ -42,5 +36,4 @@ class GroupesTableViewCell: UITableViewCell {
             self.imageViewOutlet.transform = .identity
         }
     }
-    
 }

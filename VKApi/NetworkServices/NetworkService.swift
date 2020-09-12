@@ -188,7 +188,8 @@ final class NetworkService {
     }
     
     // MARK: - Find communities request
-    func getNews(_ completionHandler: @escaping ([NewsFeedModel]) -> Void) {
+    func getNews(_ completionHandler: @escaping ([NewsFeedModel]) -> Void,
+                 _ completionError: @escaping (Bool) -> Void) {
         urlComponents.scheme = scheme
         urlComponents.host = vkApiHost
         urlComponents.path = "/method/newsfeed.get"
@@ -211,18 +212,17 @@ final class NetworkService {
                 print(error.localizedDescription)
                 return
             }
-            
-            guard let data = data,
-                let news = try? JSONDecoder().decode(Response<NewsFeedModel>.self, from: data).response.items else { return }
-            //            let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
-            //            print(json ?? "new not found")
-            
-            DispatchQueue.main.async {
-                completionHandler(news)
-                //                dump(news)
+            guard let data = data else { return }
+            do {
+                let news = try JSONDecoder().decode(Response<NewsFeedModel>.self,
+                                                     from: data).response.items
+                //            let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                DispatchQueue.main.async {
+                    completionHandler(news)
+                }
+            } catch let error {
+                completionError(true)
             }
-            
-            
         }.resume()
     }
 }

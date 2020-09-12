@@ -24,14 +24,27 @@ struct NewsFeedModel: Codable {
     let postID: Int?
     
     enum CodingKeys: String, CodingKey {
-          case sourceID = "source_id"
-          case date
-          case type
-          case postType = "post_type"
-          case text, attachments, comments, likes, reposts, views
-          case isFavorite = "is_favorite"
-          case postID = "post_id"
-      }
+        case sourceID = "source_id"
+        case date
+        case type
+        case postType = "post_type"
+        case text, attachments, comments, likes, reposts, views
+        case isFavorite = "is_favorite"
+        case postID = "post_id"
+    }
+    
+    func publicationTime(timeIntervalSince1970: Int) -> String {
+        let dateFormatter = DateFormatter()
+        
+        dateFormatter.locale = Locale(identifier: "ru")
+        dateFormatter.timeStyle = .short
+        dateFormatter.dateStyle = .none
+        dateFormatter.timeZone = .current
+        let date = Date(timeIntervalSince1970: TimeInterval(timeIntervalSince1970))
+        
+        let localDate = dateFormatter.string(from: date)
+        return localDate
+    }
 }
 
 // MARK: - Attachment
@@ -49,7 +62,7 @@ struct Photos: Codable {
     let sizes: [Size]?
     let text: String?
     let userID: Int?
-
+    
     enum CodingKeys: String, CodingKey {
         case date, id
         case ownerID = "owner_id"
@@ -74,7 +87,7 @@ struct Comments: Codable {
 struct Likes: Codable {
     let count: Int
     let userLikes: Int
-
+    
     enum CodingKeys: String, CodingKey {
         case count
         case userLikes = "user_likes"
@@ -85,7 +98,7 @@ struct Likes: Codable {
 struct Reposts: Codable {
     let count: Int
     let userReposted: Int
-
+    
     enum CodingKeys: String, CodingKey {
         case count
         case userReposted = "user_reposted"

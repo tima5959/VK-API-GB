@@ -188,6 +188,15 @@
 			path = VKApi;
 			sourceTree = "<group>";
 		};
+		B5C0CE90250D265B00B8B59E /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				B5FC403C24D44D9D00B56697 /* NewsViewController.swift */,
+				B5FC403824D44CBB00B56697 /* NewsTableViewCell.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		B5DAC13524CDE7A00081C6E2 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
@@ -295,8 +304,7 @@
 			isa = PBXGroup;
 			children = (
 				B593E4042504BE98006B1753 /* Model */,
-				B5FC403C24D44D9D00B56697 /* NewsViewController.swift */,
-				B5FC403824D44CBB00B56697 /* NewsTableViewCell.swift */,
+				B5C0CE90250D265B00B8B59E /* Controllers */,
 			);
 			path = NewsModules;
 			sourceTree = "<group>";
