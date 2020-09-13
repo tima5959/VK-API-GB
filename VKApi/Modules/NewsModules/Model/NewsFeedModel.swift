@@ -8,6 +8,23 @@
 
 import Foundation
 
+// MARK: - Welcome
+struct ResponseNews: Codable {
+    let response: ItemsNews?
+}
+
+// MARK: - Response
+struct ItemsNews: Codable {
+    let items: [NewsFeedModel]?
+    let profiles: [ProfileNews]?
+    let groups: [GroupNews]?
+    let nextFrom: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case items, profiles, groups
+        case nextFrom = "next_from"
+    }
+}
 
 struct NewsFeedModel: Codable {
     let sourceID: Int?
@@ -22,6 +39,9 @@ struct NewsFeedModel: Codable {
     let views: Comments
     let isFavorite: Bool?
     let postID: Int?
+    
+    var name: String?
+    var avatarURL: String?
     
     enum CodingKeys: String, CodingKey {
         case sourceID = "source_id"
@@ -102,5 +122,33 @@ struct Reposts: Codable {
     enum CodingKeys: String, CodingKey {
         case count
         case userReposted = "user_reposted"
+    }
+}
+
+// MARK: - Group
+struct GroupNews: Codable {
+    let id: Int?
+    let name: String?
+    let avatarURL: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case avatarURL = "photo_100"
+    }
+}
+
+// MARK: - Profile
+struct ProfileNews: Codable {
+    let id: Int?
+    let firstName: String?
+    let lastName: String?
+    let avatarURL: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case firstName = "first_name"
+        case lastName = "last_name"
+        case avatarURL = "photo_100"
     }
 }

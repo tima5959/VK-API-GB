@@ -21,7 +21,11 @@ class NewsTableViewCell: UITableViewCell {
     
     var isLiked = false
     
-    @IBOutlet weak var avatarImageView: UIImageView!  // Аватар новости
+    @IBOutlet weak var avatarImageView: UIImageView! {
+        didSet {
+            avatarImageView.layer.cornerRadius = avatarImageView.frame.width / 2
+        }
+    } // Аватар новости
     @IBOutlet weak var titleNewsFeed: UILabel!        // Название автора новости
     @IBOutlet weak var lastOnlineTime: UILabel!       // Последнее время онлайн
     
@@ -84,8 +88,10 @@ class NewsTableViewCell: UITableViewCell {
     func configure(_ data: [NewsFeedModel], at indexPath: IndexPath) -> Void {
         let news = data[indexPath.row]
         
-        animateImageView.kf.setImage(with: URL(string: news.attachments?.first?.photo?.sizes?.last?.url ?? ""))
+        avatarImageView.kf.setImage(with: URL(string: news.avatarURL ?? ""))
         
+        animateImageView.kf.setImage(with: URL(string: news.attachments?.first?.photo?.sizes?.last?.url ?? ""))
+        titleNewsFeed.text = news.name
         newsTitleText.text = news.text
         likeCountTitle.text = String("\(news.likes.count)")
         shareCountTitle.text = String("\(news.reposts.count)")

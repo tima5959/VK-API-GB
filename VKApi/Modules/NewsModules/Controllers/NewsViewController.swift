@@ -11,6 +11,7 @@ import UIKit
 class NewsViewController: UITableViewController {
     
     private let network = NetworkService()
+//    private var model: [NewsFeedModel] = []
     private var model: [NewsFeedModel] = []
     
     private let customRefreshControll = UIRefreshControl()

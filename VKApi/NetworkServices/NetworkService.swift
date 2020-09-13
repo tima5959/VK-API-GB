@@ -214,13 +214,29 @@ final class NetworkService {
             }
             guard let data = data else { return }
             do {
-                let news = try JSONDecoder().decode(Response<NewsFeedModel>.self,
+                var news = try JSONDecoder().decode(Response<NewsFeedModel>.self,
                                                      from: data).response.items
+                print(news.count)
+                let groups = try JSONDecoder().decode(ResponseNews.self, from: data).response?.groups
+                let friends = try JSONDecoder().decode(ResponseNews.self, from: data).response?.profiles
                 //            let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                
+                for i in 0..<news.count {
+                    if news[i].sourceID ?? 0 < 0 {
+                        guard let group = groups?.first(where: { $0.id == -news[i].sourceID! }) else { return }
+                        news[i].avatarURL = group.avatarURL
+                        news[i].name = group.name
+                    } else if news[i].sourceID ?? 0 > 0 {
+                        guard let friend = friends?.first(where: { $0.id == news[i].sourceID }) else { return }
+                        news[i].avatarURL = friend.avatarURL
+                        news[i].name = "\(friend.firstName ?? "Username")" + " " + "\(friend.lastName ?? " ")"
+                    }
+                }
+                
                 DispatchQueue.main.async {
                     completionHandler(news)
                 }
-            } catch let error {
+            } catch {
                 completionError(true)
             }
         }.resume()

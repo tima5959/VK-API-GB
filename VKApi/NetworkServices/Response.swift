@@ -9,10 +9,7 @@
 import Foundation
 
 class Response<T: Codable>: Codable {
-    let response: Items<T>
-    let profiles: [Friend]? = []
-    let groups: [Groups]? = []
-    let next_from: String? = ""    
+    let response: Items<T>   
 }
 
 class Items<T: Codable>: Codable {
