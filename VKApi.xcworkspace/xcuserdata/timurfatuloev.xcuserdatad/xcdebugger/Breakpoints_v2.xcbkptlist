@@ -3,4 +3,131 @@
    uuid = "ABFF97A3-28D1-4EBD-A290-31C6159A06A0"
    type = "0"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3F2FF43E-1A1E-4C11-B859-D3B07368D6FA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VKApi/NetworkServices/OperationsNetworking/OperationNetwork.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
+            landmarkName = "main()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A7E12C2F-7109-4C68-81D9-B60C1FDCAE06"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VKApi/NetworkServices/OperationsNetworking/OperationNetwork.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "getNews(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7B8803C6-81E4-46EE-B353-3DC13736A418"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VKApi/NetworkServices/OperationsNetworking/OperationNetwork.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "24"
+            endingLineNumber = "24"
+            landmarkName = "NetworkOperation"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "7B8803C6-81E4-46EE-B353-3DC13736A418 - 2de5b2043fa4b20c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VKApi.NetworkOperation.data.getter : Swift.Optional&lt;Foundation.Data&gt;"
+                  moduleName = "VKApi"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/Macintosh%20HD/%D0%9A%D1%83%D1%80%D1%81%D1%8B/GB/VKApi/VKApi/NetworkServices/OperationsNetworking/OperationNetwork.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "24"
+                  endingLineNumber = "24"
+                  offsetFromSymbolStart = "209">
+               </Location>
+               <Location
+                  uuid = "7B8803C6-81E4-46EE-B353-3DC13736A418 - b90ac4f73101af58"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VKApi.NetworkOperation.data.setter : Swift.Optional&lt;Foundation.Data&gt;"
+                  moduleName = "VKApi"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/Macintosh%20HD/%D0%9A%D1%83%D1%80%D1%81%D1%8B/GB/VKApi/VKApi/NetworkServices/OperationsNetworking/OperationNetwork.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "24"
+                  endingLineNumber = "24"
+                  offsetFromSymbolStart = "357">
+               </Location>
+               <Location
+                  uuid = "7B8803C6-81E4-46EE-B353-3DC13736A418 - 550fb870242b795b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VKApi.NetworkOperation.data.modify : Swift.Optional&lt;Foundation.Data&gt;"
+                  moduleName = "VKApi"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/Macintosh%20HD/%D0%9A%D1%83%D1%80%D1%81%D1%8B/GB/VKApi/VKApi/NetworkServices/OperationsNetworking/OperationNetwork.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "53">
+               </Location>
+               <Location
+                  uuid = "7B8803C6-81E4-46EE-B353-3DC13736A418 - e4ad173ae206aab4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VKApi.NetworkOperation.data.modify : Swift.Optional&lt;Foundation.Data&gt; with unmangled suffix &quot;.resume.0&quot;"
+                  moduleName = "VKApi"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/Macintosh%20HD/%D0%9A%D1%83%D1%80%D1%81%D1%8B/GB/VKApi/VKApi/NetworkServices/OperationsNetworking/OperationNetwork.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "24"
+                  endingLineNumber = "24"
+                  offsetFromSymbolStart = "28">
+               </Location>
+               <Location
+                  uuid = "7B8803C6-81E4-46EE-B353-3DC13736A418 - e10080953bcc9d5c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VKApi.NetworkOperation.init() -&gt; VKApi.NetworkOperation"
+                  moduleName = "VKApi"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/Macintosh%20HD/%D0%9A%D1%83%D1%80%D1%81%D1%8B/GB/VKApi/VKApi/NetworkServices/OperationsNetworking/OperationNetwork.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "24"
+                  endingLineNumber = "24"
+                  offsetFromSymbolStart = "1679">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

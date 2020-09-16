@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9629370A82F66199F48424CD /* Pods_VKApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33EC894FDC5A6ECC074BED0E /* Pods_VKApi.framework */; };
+		B52354462511689800B7E86F /* OperationNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52354452511689800B7E86F /* OperationNetwork.swift */; };
 		B52EE8DC24E5C3BE00176EAA /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52EE8DB24E5C3BE00176EAA /* Session.swift */; };
 		B52EE8DE24E5C5E500176EAA /* VKLoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52EE8DD24E5C5E500176EAA /* VKLoginController.swift */; };
 		B52EE8E124E5D8E200176EAA /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52EE8E024E5D8E200176EAA /* NetworkService.swift */; };
@@ -41,6 +42,7 @@
 /* Begin PBXFileReference section */
 		33EC894FDC5A6ECC074BED0E /* Pods_VKApi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VKApi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42E07992D5FB76B09D3A7511 /* Pods-VKApi.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKApi.release.xcconfig"; path = "Target Support Files/Pods-VKApi/Pods-VKApi.release.xcconfig"; sourceTree = "<group>"; };
+		B52354452511689800B7E86F /* OperationNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationNetwork.swift; sourceTree = "<group>"; };
 		B52EE8DB24E5C3BE00176EAA /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		B52EE8DD24E5C5E500176EAA /* VKLoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKLoginController.swift; sourceTree = "<group>"; };
 		B52EE8E024E5D8E200176EAA /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -87,9 +89,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B52354442511687800B7E86F /* OperationsNetworking */ = {
+			isa = PBXGroup;
+			children = (
+				B52354452511689800B7E86F /* OperationNetwork.swift */,
+			);
+			path = OperationsNetworking;
+			sourceTree = "<group>";
+		};
 		B52EE8DF24E5D8B000176EAA /* NetworkServices */ = {
 			isa = PBXGroup;
 			children = (
+				B52354442511687800B7E86F /* OperationsNetworking */,
 				B5EA886124E9872D002C13E0 /* Response.swift */,
 				B52EE8E024E5D8E200176EAA /* NetworkService.swift */,
 				B5F1BBC124FAAB9300097AC2 /* NetworkServices + Ext.swift */,
@@ -453,6 +464,7 @@
 				B569877524FBDFEE009933D1 /* Photo.swift in Sources */,
 				B5DAC14624CDE96C0081C6E2 /* GroupesTableViewController.swift in Sources */,
 				B550E32924EEF50600C42755 /* RealmService.swift in Sources */,
+				B52354462511689800B7E86F /* OperationNetwork.swift in Sources */,
 				B5DAC14A24CDE98B0081C6E2 /* DetailTableViewCell.swift in Sources */,
 				B5EA886024E9745A002C13E0 /* Friend.swift in Sources */,
 				B5DAC13A24CDE8720081C6E2 /* FriendsDetailCollectionViewController.swift in Sources */,
