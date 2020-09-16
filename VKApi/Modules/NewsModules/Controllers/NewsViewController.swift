@@ -32,28 +32,35 @@ class NewsViewController: UITableViewController {
     
     private func fetchNewsOperation() {
         let fetchingQ = OperationQueue()
-        fetchingQ.maxConcurrentOperationCount = 5
+//        fetchingQ.maxConcurrentOperationCount = 5
         fetchingQ.name = "fetch operation queue"
         
         let networkOperation = NetworkOperation()
         networkOperation.completionBlock = { [weak self] in
-            guard let model = networkOperation.data else { return }
-        }
-        
-        let parseOperation = ParseOperation()
-        parseOperation.addDependency(networkOperation)
-        parseOperation.completionBlock = { [weak self] in
             guard let self = self else { return }
-            guard let model = parseOperation.model else { return }
-            self.model = model
-            
+            let operationData = networkOperation.model
             DispatchQueue.main.async {
+                self.model = operationData
                 self.tableView.reloadData()
-                self.tableView.refreshControl?.endRefreshing()
             }
         }
         
-        fetchingQ.addOperations([networkOperation,parseOperation], waitUntilFinished: false)
+        fetchingQ.addOperation(networkOperation)
+        
+//        let parseOperation = ParseOperation()
+//        parseOperation.addDependency(networkOperation)
+//        parseOperation.completionBlock = { [weak self] in
+//            guard let self = self else { return }
+//            guard let model = parseOperation.model else { return }
+//            self.model = model
+//
+//            DispatchQueue.main.async {
+//                self.tableView.reloadData()
+//                self.tableView.refreshControl?.endRefreshing()
+//            }
+//        }
+        
+//        fetchingQ.addOperations([networkOperation,parseOperation], waitUntilFinished: false)
     }
     
     private func fetchNews() {

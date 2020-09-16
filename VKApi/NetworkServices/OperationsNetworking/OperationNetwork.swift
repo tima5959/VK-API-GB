@@ -21,23 +21,23 @@ class NetworkOperation: Operation {
     private let version = "5.122"
     private let autorizeHost = "oauth.vk.com"
     
-    var data: Data?
+    var model: [NewsFeedModel] = []
     
     override func main() {
-        if isCancelled {
-            return
-        }
+//        if isCancelled {
+//            return
+//        }
         
-        getNews(data)
+        getNews()
     }
     
-    override func cancel() {
-        task?.cancel()
-        super.cancel()
-    }
+//    override func cancel() {
+//        task?.cancel()
+//        super.cancel()
+//    }
     
     // MARK: - Find communities request
-    func getNews(_ newsData: Data?) -> Void {
+    func getNews() -> Void {
         urlComponents.scheme = scheme
         urlComponents.host = vkApiHost
         urlComponents.path = "/method/newsfeed.get"
@@ -51,9 +51,9 @@ class NetworkOperation: Operation {
         ]
         guard let url = urlComponents.url else { return }
         
-        if isCancelled {
-            return
-        }
+//        if isCancelled {
+//            return
+//        }
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -62,64 +62,104 @@ class NetworkOperation: Operation {
                 print(error.localizedDescription)
                 return
             }
-            guard let datas = data else { return }
-            self.data = datas
+            guard let data = data else { return }
+            do {
+                var news = try JSONDecoder()
+                    .decode(Response<NewsFeedModel>.self, from: data)
+                    .response
+                    .items
+                
+                let groups = try JSONDecoder()
+                    .decode(ResponseNews.self, from: data)
+                    .response?
+                    .groups
+                
+                let friends = try JSONDecoder()
+                    .decode(ResponseNews.self, from: data)
+                    .response?
+                    .profiles
+                
+                
+                for i in 0..<news.count {
+                    if news[i].sourceID ?? 0 < 0 {
+                        guard let group = groups?.first(where: {
+                            $0.id == -news[i].sourceID!
+                        }) else { return }
+                        
+                        news[i].avatarURL = group.avatarURL
+                        news[i].name = group.name
+                        
+                    } else if news[i].sourceID ?? 0 > 0 {
+                        guard let friend = friends?
+                            .first(where: {
+                                $0.id == news[i].sourceID
+                        }) else { return }
+                        
+                        news[i].avatarURL = friend.avatarURL
+                        news[i].name = "\(friend.firstName ?? "Username")" + " " + "\(friend.lastName ?? " ")"
+                    }
+                }
+                self.model = news
+            } catch {
+                print(error.localizedDescription)
+            }
         }
         task?.resume()
     }
+    
 }
 
-class ParseOperation: Operation {
-    
-    var data: Data?
-    var model: [NewsFeedModel]?
-    
-    override func main() {
-        if isCancelled {
-            return
-        }
-        
-        guard let networkOperation = dependencies.first as? NetworkOperation,
-            let data = networkOperation.data else { return }
-        
-        var news = try? JSONDecoder()
-            .decode(Response<NewsFeedModel>.self, from: self.data!)
-            .response
-            .items
-        
-        
-        let groups = try? JSONDecoder()
-            .decode(ResponseNews.self, from: data)
-            .response?
-            .groups
-        
-        let friends = try? JSONDecoder()
-            .decode(ResponseNews.self, from: data)
-            .response?
-            .profiles
-        
-        for i in 0..<news!.count {
-            if news![i].sourceID ?? 0 < 0 {
-                guard let group = groups?.first(where: {
-                    $0.id == -news![i].sourceID!
-                }) else { return }
-                
-                news![i].avatarURL = group.avatarURL
-                news![i].name = group.name
-                
-            } else if news![i].sourceID ?? 0 > 0 {
-                guard let friend = friends?.first(where: {
-                    $0.id == news![i].sourceID
-                }) else { return }
-                
-                news![i].avatarURL = friend.avatarURL
-                news![i].name = "\(friend.firstName ?? "Username")" + " " + "\(friend.lastName ?? " ")"
-            }
-        }
-        self.model = news
-    }
-    
-    
-}
+//class ParseOperation: Operation {
+//
+//    var data: Data?
+//    var model: [NewsFeedModel]?
+//
+//    override func main() {
+//        if isCancelled {
+//            return
+//        }
+//
+//        guard let networkOperation = dependencies.first as? NetworkOperation,
+//            let data = networkOperation.data else { return }
+//
+//        var news = try? JSONDecoder()
+//            .decode(Response<NewsFeedModel>.self, from: self.data!)
+//            .response
+//            .items
+//
+//
+//        let groups = try? JSONDecoder()
+//            .decode(ResponseNews.self, from: data)
+//            .response?
+//            .groups
+//
+//        let friends = try? JSONDecoder()
+//            .decode(ResponseNews.self, from: data)
+//            .response?
+//            .profiles
+//
+//        for i in 0..<news!.count {
+//            if news![i].sourceID ?? 0 < 0 {
+//                guard let group = groups?.first(where: {
+//                    $0.id == -news![i].sourceID!
+//                }) else { return }
+//
+//                news![i].avatarURL = group.avatarURL
+//                news![i].name = group.name
+//
+//            } else if news![i].sourceID ?? 0 > 0 {
+//                guard let friend = friends?.first(where: {
+//                    $0.id == news![i].sourceID
+//                }) else { return }
+//
+//                news![i].avatarURL = friend.avatarURL
+//                news![i].name = "\(friend.firstName ?? "Username")" + " " + "\(friend.lastName ?? " ")"
+//            }
+//        }
+//        self.model = news
+//    }
+//
+//
+//}
 
 
