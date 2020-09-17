@@ -1,8 +1,8 @@
 //
-//  NetworkService.swift
+//  NetworkServices.swift
 //  VKApi
 //
-//  Created by Тимур Фатулоев on 13.08.2020.
+//  Created by Тимур Фатулоев on 17.09.2020.
 //  Copyright © 2020 Тимур Фатулоев. All rights reserved.
 //
 
@@ -215,7 +215,7 @@ final class NetworkService {
             guard let data = data else { return }
             do {
                 var news = try JSONDecoder().decode(Response<NewsFeedModel>.self,
-                                                     from: data).response.items
+                                                    from: data).response.items
                 print(news.count)
                 let groups = try JSONDecoder().decode(ResponseNews.self, from: data).response?.groups
                 let friends = try JSONDecoder().decode(ResponseNews.self, from: data).response?.profiles

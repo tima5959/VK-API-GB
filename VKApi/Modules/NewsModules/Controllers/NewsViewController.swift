@@ -15,9 +15,9 @@ class NewsViewController: UITableViewController {
     
     private let customRefreshControll = UIRefreshControl()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
+    // Create my own operation queue
+    // Создаел свою очередь операции
+    private let operationQ = OperationQueue()
     
     override func viewWillAppear(_ animated: Bool) {
         tableView.estimatedRowHeight = UITableView.automaticDimension
@@ -27,9 +27,25 @@ class NewsViewController: UITableViewController {
         tableView.refreshControl = customRefreshControll
         
 //        fetchNews()
-     
+        fetchNewsOperations()
     }
     
+    // MARK: Asyncronology fetch with Operations
+    private func fetchNewsOperations() {
+        // создал экземпляр операции
+        let operation = NetworkOperation()
+        operation.completionBlock = {
+            DispatchQueue.main.async {
+                self.model = operation.model
+                self.tableView.reloadData()
+                self.tableView.refreshControl?.endRefreshing()
+            }
+        }
+        // добавил в свою очередь операции экземпляр операции выше
+        operationQ.addOperation(operation)
+    }
+    
+    // MARK: Asyncronology fetch with GCD
     private func fetchNews() {
         DispatchQueue.global().async {
             self.network.getNews({ [weak self] (news) in
@@ -48,12 +64,13 @@ class NewsViewController: UITableViewController {
     }
     
     @objc func refreshControllAction() {
-        fetchNews()
+//        fetchNews()
+        fetchNewsOperations()
     }
     
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
-        1
+        return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -68,12 +85,11 @@ class NewsViewController: UITableViewController {
         return cell
     }
     
-    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        return tableView.deselectRow(at: indexPath, animated: true)
     }
 }

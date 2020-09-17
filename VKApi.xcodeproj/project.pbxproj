@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		9629370A82F66199F48424CD /* Pods_VKApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33EC894FDC5A6ECC074BED0E /* Pods_VKApi.framework */; };
-		B52354462511689800B7E86F /* OperationNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52354452511689800B7E86F /* OperationNetwork.swift */; };
+		B52354492513FAC800B7E86F /* NetworkServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52354482513FAC800B7E86F /* NetworkServices.swift */; };
+		B523544C2514010C00B7E86F /* NetworkOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B523544B2514010C00B7E86F /* NetworkOperation.swift */; };
 		B52EE8DC24E5C3BE00176EAA /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52EE8DB24E5C3BE00176EAA /* Session.swift */; };
 		B52EE8DE24E5C5E500176EAA /* VKLoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52EE8DD24E5C5E500176EAA /* VKLoginController.swift */; };
-		B52EE8E124E5D8E200176EAA /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52EE8E024E5D8E200176EAA /* NetworkService.swift */; };
 		B52EE8E424E5E29E00176EAA /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B52EE8E324E5E29E00176EAA /* WebKit.framework */; };
 		B53FB72D24CF5CDA0009977E /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53FB72C24CF5CDA0009977E /* Extension.swift */; };
 		B550E32924EEF50600C42755 /* RealmService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B550E32824EEF50600C42755 /* RealmService.swift */; };
@@ -42,10 +42,10 @@
 /* Begin PBXFileReference section */
 		33EC894FDC5A6ECC074BED0E /* Pods_VKApi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VKApi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42E07992D5FB76B09D3A7511 /* Pods-VKApi.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKApi.release.xcconfig"; path = "Target Support Files/Pods-VKApi/Pods-VKApi.release.xcconfig"; sourceTree = "<group>"; };
-		B52354452511689800B7E86F /* OperationNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationNetwork.swift; sourceTree = "<group>"; };
+		B52354482513FAC800B7E86F /* NetworkServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServices.swift; sourceTree = "<group>"; };
+		B523544B2514010C00B7E86F /* NetworkOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkOperation.swift; sourceTree = "<group>"; };
 		B52EE8DB24E5C3BE00176EAA /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		B52EE8DD24E5C5E500176EAA /* VKLoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKLoginController.swift; sourceTree = "<group>"; };
-		B52EE8E024E5D8E200176EAA /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		B52EE8E324E5E29E00176EAA /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		B53FB72C24CF5CDA0009977E /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		B550E32824EEF50600C42755 /* RealmService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmService.swift; sourceTree = "<group>"; };
@@ -92,7 +92,7 @@
 		B52354442511687800B7E86F /* OperationsNetwork */ = {
 			isa = PBXGroup;
 			children = (
-				B52354452511689800B7E86F /* OperationNetwork.swift */,
+				B523544B2514010C00B7E86F /* NetworkOperation.swift */,
 			);
 			path = OperationsNetwork;
 			sourceTree = "<group>";
@@ -101,8 +101,8 @@
 			isa = PBXGroup;
 			children = (
 				B5EA886124E9872D002C13E0 /* Response.swift */,
-				B52EE8E024E5D8E200176EAA /* NetworkService.swift */,
 				B5F1BBC124FAAB9300097AC2 /* NetworkServices + Ext.swift */,
+				B52354482513FAC800B7E86F /* NetworkServices.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -459,20 +459,20 @@
 				B5FC403924D44CBB00B56697 /* NewsTableViewCell.swift in Sources */,
 				B5B69AFD24CC85A600E9B552 /* ViewController.swift in Sources */,
 				B5EA886224E9872D002C13E0 /* Response.swift in Sources */,
-				B52EE8E124E5D8E200176EAA /* NetworkService.swift in Sources */,
 				B5C51FBA2504F0D80028671B /* NewsFeedModel.swift in Sources */,
 				B53FB72D24CF5CDA0009977E /* Extension.swift in Sources */,
 				B52EE8DC24E5C3BE00176EAA /* Session.swift in Sources */,
 				B5F1BBC224FAAB9300097AC2 /* NetworkServices + Ext.swift in Sources */,
 				B5B69AF924CC85A600E9B552 /* AppDelegate.swift in Sources */,
 				B5DAC13824CDE83B0081C6E2 /* FriendsTableViewController.swift in Sources */,
+				B52354492513FAC800B7E86F /* NetworkServices.swift in Sources */,
 				B5DAC14124CDE8F00081C6E2 /* FriendsDetailCollectionViewCell.swift in Sources */,
+				B523544C2514010C00B7E86F /* NetworkOperation.swift in Sources */,
 				B5DAC13F24CDE8DC0081C6E2 /* FriendsTableViewCell.swift in Sources */,
 				B5B69AFB24CC85A600E9B552 /* SceneDelegate.swift in Sources */,
 				B569877524FBDFEE009933D1 /* Photo.swift in Sources */,
 				B5DAC14624CDE96C0081C6E2 /* GroupesTableViewController.swift in Sources */,
 				B550E32924EEF50600C42755 /* RealmService.swift in Sources */,
-				B52354462511689800B7E86F /* OperationNetwork.swift in Sources */,
 				B5DAC14A24CDE98B0081C6E2 /* DetailTableViewCell.swift in Sources */,
 				B5EA886024E9745A002C13E0 /* Friend.swift in Sources */,
 				B5DAC13A24CDE8720081C6E2 /* FriendsDetailCollectionViewController.swift in Sources */,
