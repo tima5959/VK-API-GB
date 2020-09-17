@@ -32,35 +32,33 @@ class NewsViewController: UITableViewController {
     
     private func fetchNewsOperation() {
         let fetchingQ = OperationQueue()
-//        fetchingQ.maxConcurrentOperationCount = 5
         fetchingQ.name = "fetch operation queue"
         
         let networkOperation = NetworkOperation()
         networkOperation.completionBlock = { [weak self] in
             guard let self = self else { return }
-            let operationData = networkOperation.model
+//            let operationData = networkOperation.model
+//            self.model = operationData
+            networkOperation.getNews({ [weak self] _ in
+                guard let self = self else { return }
+                self.model = networkOperation.model
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                    self.tableView.refreshControl?.endRefreshing()
+                }
+            }) { [unowned self] _ in
+                DispatchQueue.main.async {
+                    self.tableView.refreshControl?.endRefreshing()
+                }
+            }
+            print(self.model.count)
+            
             DispatchQueue.main.async {
-                self.model = operationData
                 self.tableView.reloadData()
             }
         }
         
         fetchingQ.addOperation(networkOperation)
-        
-//        let parseOperation = ParseOperation()
-//        parseOperation.addDependency(networkOperation)
-//        parseOperation.completionBlock = { [weak self] in
-//            guard let self = self else { return }
-//            guard let model = parseOperation.model else { return }
-//            self.model = model
-//
-//            DispatchQueue.main.async {
-//                self.tableView.reloadData()
-//                self.tableView.refreshControl?.endRefreshing()
-//            }
-//        }
-        
-//        fetchingQ.addOperations([networkOperation,parseOperation], waitUntilFinished: false)
     }
     
     private func fetchNews() {

@@ -23,21 +23,69 @@ class NetworkOperation: Operation {
     
     var model: [NewsFeedModel] = []
     
-    override func main() {
-//        if isCancelled {
-//            return
-//        }
-        
-        getNews()
+    enum State: String {
+        case ready, executing, finished
+        fileprivate var keyPath: String {
+            return "is" + rawValue.capitalized
+        }
     }
     
-//    override func cancel() {
-//        task?.cancel()
-//        super.cancel()
-//    }
+    var state = State.ready {
+        willSet {
+            willChangeValue(forKey: state.keyPath)
+            willChangeValue(forKey: newValue.keyPath)
+        }
+        didSet {
+            didChangeValue(forKey: state.keyPath)
+            didChangeValue(forKey: oldValue.keyPath)
+        }
+    }
     
-    // MARK: - Find communities request
-    func getNews() -> Void {
+    override var isAsynchronous: Bool {
+        return true
+    }
+    
+    override var isReady: Bool {
+        return super.isReady && state == .ready
+    }
+    
+    override var isExecuting: Bool {
+        return state == .executing
+    }
+    
+    override var isFinished: Bool {
+        return state == .finished
+    }
+    
+    override func start() {
+        if isCancelled {
+            state = .finished
+        } else {
+            main()
+            state = .executing
+        }
+    }
+    
+    override func main() {
+        if isCancelled {
+            return
+        }
+        
+        getNews({ [weak self] (news) in
+            self?.model = news
+        }) { _ in
+            print("operation fetching failed")
+        }
+    }
+    
+    override func cancel() {
+        task?.cancel()
+        state = .finished
+        super.cancel()
+    }
+    
+    func getNews(_ completionHandler: @escaping ([NewsFeedModel]) -> Void,
+                 _ completionError: @escaping (Bool) -> Void) {
         urlComponents.scheme = scheme
         urlComponents.host = vkApiHost
         urlComponents.path = "/method/newsfeed.get"
@@ -49,66 +97,50 @@ class NetworkOperation: Operation {
             .init(name: "access_token", value: Session.shared.token),
             .init(name: "v", value: version)
         ]
-        guard let url = urlComponents.url else { return }
         
-//        if isCancelled {
-//            return
-//        }
-        
+        guard let url = urlComponents.url else {
+            return
+        }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        task = session.dataTask(with: request) { data, response, error in
+        session.dataTask(with: request) { data, response, error in
             if let error = error {
                 print(error.localizedDescription)
                 return
             }
             guard let data = data else { return }
             do {
-                var news = try JSONDecoder()
-                    .decode(Response<NewsFeedModel>.self, from: data)
-                    .response
-                    .items
-                
-                let groups = try JSONDecoder()
-                    .decode(ResponseNews.self, from: data)
-                    .response?
-                    .groups
-                
-                let friends = try JSONDecoder()
-                    .decode(ResponseNews.self, from: data)
-                    .response?
-                    .profiles
-                
+                var news = try JSONDecoder().decode(Response<NewsFeedModel>.self,
+                                                    from: data).response.items
+                print(news.count)
+                let groups = try JSONDecoder().decode(ResponseNews.self, from: data).response?.groups
+                let friends = try JSONDecoder().decode(ResponseNews.self, from: data).response?.profiles
+                //            let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
                 
                 for i in 0..<news.count {
                     if news[i].sourceID ?? 0 < 0 {
-                        guard let group = groups?.first(where: {
-                            $0.id == -news[i].sourceID!
-                        }) else { return }
-                        
+                        guard let group = groups?.first(where: { $0.id == -news[i].sourceID! }) else { return }
                         news[i].avatarURL = group.avatarURL
                         news[i].name = group.name
-                        
                     } else if news[i].sourceID ?? 0 > 0 {
-                        guard let friend = friends?
-                            .first(where: {
-                                $0.id == news[i].sourceID
-                        }) else { return }
-                        
+                        guard let friend = friends?.first(where: { $0.id == news[i].sourceID }) else { return }
                         news[i].avatarURL = friend.avatarURL
                         news[i].name = "\(friend.firstName ?? "Username")" + " " + "\(friend.lastName ?? " ")"
                     }
                 }
-                self.model = news
+                
+                DispatchQueue.main.async {
+                    completionHandler(news)
+                }
             } catch {
-                print(error.localizedDescription)
+                completionError(true)
             }
-        }
-        task?.resume()
+        }.resume()
+        
+        
     }
     
 }
-
 //class ParseOperation: Operation {
 //
 //    var data: Data?
@@ -161,5 +193,3 @@ class NetworkOperation: Operation {
 //
 //
 //}
-
-
