@@ -89,21 +89,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		B52354442511687800B7E86F /* OperationsNetworking */ = {
+		B52354442511687800B7E86F /* OperationsNetwork */ = {
 			isa = PBXGroup;
 			children = (
 				B52354452511689800B7E86F /* OperationNetwork.swift */,
 			);
-			path = OperationsNetworking;
+			path = OperationsNetwork;
+			sourceTree = "<group>";
+		};
+		B52354472513F95400B7E86F /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				B5EA886124E9872D002C13E0 /* Response.swift */,
+				B52EE8E024E5D8E200176EAA /* NetworkService.swift */,
+				B5F1BBC124FAAB9300097AC2 /* NetworkServices + Ext.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 		B52EE8DF24E5D8B000176EAA /* NetworkServices */ = {
 			isa = PBXGroup;
 			children = (
-				B52354442511687800B7E86F /* OperationsNetworking */,
-				B5EA886124E9872D002C13E0 /* Response.swift */,
-				B52EE8E024E5D8E200176EAA /* NetworkService.swift */,
-				B5F1BBC124FAAB9300097AC2 /* NetworkServices + Ext.swift */,
+				B52354472513F95400B7E86F /* Network */,
+				B52354442511687800B7E86F /* OperationsNetwork */,
 			);
 			path = NetworkServices;
 			sourceTree = "<group>";

@@ -27,25 +27,7 @@ class NewsViewController: UITableViewController {
         tableView.refreshControl = customRefreshControll
         
 //        fetchNews()
-        fetchNewsOperation()
-    }
-    
-    private func fetchNewsOperation() {
-        let fetchingQ = OperationQueue()
-        fetchingQ.name = "fetch operation queue"
-        fetchingQ.maxConcurrentOperationCount = 1
-        
-        let networkOperation = NetworkOperation()
-        networkOperation.completionBlock = { [weak self] in
-            guard let self = self else { return }
-            
-            DispatchQueue.main.async {
-                self.model = networkOperation.model
-                self.tableView.reloadData()
-            }
-        }
-        
-        fetchingQ.addOperation(networkOperation)
+     
     }
     
     private func fetchNews() {
