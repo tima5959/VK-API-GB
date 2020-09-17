@@ -71,11 +71,7 @@ class NetworkOperation: Operation {
             return
         }
         
-        getNews({ [weak self] (news) in
-            self?.model = news
-        }) { _ in
-            print("operation fetching failed")
-        }
+        getNews()
     }
     
     override func cancel() {
@@ -84,8 +80,7 @@ class NetworkOperation: Operation {
         super.cancel()
     }
     
-    func getNews(_ completionHandler: @escaping ([NewsFeedModel]) -> Void,
-                 _ completionError: @escaping (Bool) -> Void) {
+    private func getNews() {
         urlComponents.scheme = scheme
         urlComponents.host = vkApiHost
         urlComponents.path = "/method/newsfeed.get"
@@ -128,12 +123,9 @@ class NetworkOperation: Operation {
                         news[i].name = "\(friend.firstName ?? "Username")" + " " + "\(friend.lastName ?? " ")"
                     }
                 }
-                
-                DispatchQueue.main.async {
-                    completionHandler(news)
-                }
+                self.model = news
             } catch {
-                completionError(true)
+                print(error.localizedDescription)
             }
         }.resume()
         
