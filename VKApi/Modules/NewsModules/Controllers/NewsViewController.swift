@@ -11,7 +11,7 @@ import UIKit
 class NewsViewController: UITableViewController {
     
     private let network = NetworkService()
-    private var model: [NewsFeedModel] = []
+    var model: [NewsFeedModel] = []
     
     private let customRefreshControll = UIRefreshControl()
     
@@ -27,7 +27,18 @@ class NewsViewController: UITableViewController {
         tableView.refreshControl = customRefreshControll
         
 //        fetchNews()
-        fetchNewsOperations()
+//        fetchNewsOperations()
+        
+        let fetchNewsData = NetworkAsyncOperation()
+        operationQ.addOperation(fetchNewsData)
+        
+        let parseCommunitiesOperation = ParseCommunitiesOperation()
+        parseCommunitiesOperation.addDependency(fetchNewsData)
+        operationQ.addOperation(parseCommunitiesOperation)
+        
+        let reloadDataOperation = ReloadTableController(self)
+        reloadDataOperation.addDependency(parseCommunitiesOperation)
+        OperationQueue.main.addOperation(reloadDataOperation)
     }
     
     // MARK: Asyncronology fetch with Operations

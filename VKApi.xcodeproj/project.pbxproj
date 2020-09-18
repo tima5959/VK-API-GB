@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9629370A82F66199F48424CD /* Pods_VKApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33EC894FDC5A6ECC074BED0E /* Pods_VKApi.framework */; };
+		B512384F251544D700ACF939 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512384E251544D700ACF939 /* AsyncOperation.swift */; };
 		B52354492513FAC800B7E86F /* NetworkServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52354482513FAC800B7E86F /* NetworkServices.swift */; };
 		B523544C2514010C00B7E86F /* NetworkOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B523544B2514010C00B7E86F /* NetworkOperation.swift */; };
 		B52EE8DC24E5C3BE00176EAA /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52EE8DB24E5C3BE00176EAA /* Session.swift */; };
@@ -42,6 +43,7 @@
 /* Begin PBXFileReference section */
 		33EC894FDC5A6ECC074BED0E /* Pods_VKApi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VKApi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42E07992D5FB76B09D3A7511 /* Pods-VKApi.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKApi.release.xcconfig"; path = "Target Support Files/Pods-VKApi/Pods-VKApi.release.xcconfig"; sourceTree = "<group>"; };
+		B512384E251544D700ACF939 /* AsyncOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
 		B52354482513FAC800B7E86F /* NetworkServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServices.swift; sourceTree = "<group>"; };
 		B523544B2514010C00B7E86F /* NetworkOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkOperation.swift; sourceTree = "<group>"; };
 		B52EE8DB24E5C3BE00176EAA /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				B523544B2514010C00B7E86F /* NetworkOperation.swift */,
+				B512384E251544D700ACF939 /* AsyncOperation.swift */,
 			);
 			path = OperationsNetwork;
 			sourceTree = "<group>";
@@ -101,8 +104,8 @@
 			isa = PBXGroup;
 			children = (
 				B5EA886124E9872D002C13E0 /* Response.swift */,
-				B5F1BBC124FAAB9300097AC2 /* NetworkServices + Ext.swift */,
 				B52354482513FAC800B7E86F /* NetworkServices.swift */,
+				B5F1BBC124FAAB9300097AC2 /* NetworkServices + Ext.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -466,6 +469,7 @@
 				B5B69AF924CC85A600E9B552 /* AppDelegate.swift in Sources */,
 				B5DAC13824CDE83B0081C6E2 /* FriendsTableViewController.swift in Sources */,
 				B52354492513FAC800B7E86F /* NetworkServices.swift in Sources */,
+				B512384F251544D700ACF939 /* AsyncOperation.swift in Sources */,
 				B5DAC14124CDE8F00081C6E2 /* FriendsDetailCollectionViewCell.swift in Sources */,
 				B523544C2514010C00B7E86F /* NetworkOperation.swift in Sources */,
 				B5DAC13F24CDE8DC0081C6E2 /* FriendsTableViewCell.swift in Sources */,

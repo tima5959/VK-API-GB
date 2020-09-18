@@ -166,28 +166,6 @@ final class NetworkService {
     }
     
     // MARK: - Find communities request
-    func getFindGroups(title forFind: String) {
-        urlComponents.scheme = scheme
-        urlComponents.host = vkApiHost
-        urlComponents.path = "/method/groups.search"
-        urlComponents.queryItems = [
-            .init(name: "q", value: forFind),
-            .init(name: "sort", value: "0"),
-            .init(name: "access_token", value: Session.shared.token),
-            .init(name: "v", value: version)
-        ]
-        
-        guard let url = urlComponents.url else { preconditionFailure("findGroups network methods is failure") }
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        
-        session.dataTask(with: request) { data, response, error in
-            let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-            print(json ?? "")
-        }.resume()
-    }
-    
-    // MARK: - Find communities request
     func getNews(_ completionHandler: @escaping ([NewsFeedModel]) -> Void,
                  _ completionError: @escaping (Bool) -> Void) {
         urlComponents.scheme = scheme
