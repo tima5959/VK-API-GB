@@ -34,21 +34,11 @@ class NewsViewController: UITableViewController {
         
         let parseCommunitiesOperation = ParseCommunitiesOperation()
         parseCommunitiesOperation.addDependency(fetchNewsData)
-        
-        parseCommunitiesOperation.completionBlock = {
-            DispatchQueue.main.async {
-                guard let data = parseCommunitiesOperation.parseData else { return print("issue parseCommunitiesOperation") }
-                self.model = data
-                self.tableView.reloadData()
-                self.tableView.refreshControl?.endRefreshing()
-            }
-        }
-
         operationQ.addOperation(parseCommunitiesOperation)
-                
-//        let reloadDataOperation = ReloadTableController(self)
-//        reloadDataOperation.addDependency(parseCommunitiesOperation)
-//        OperationQueue.main.addOperation(reloadDataOperation)
+        
+        let reloadDataOperation = ReloadTableController(self)
+        reloadDataOperation.addDependency(parseCommunitiesOperation)
+        operationQ.addOperation(reloadDataOperation)
     }
     
     // MARK: Asyncronology fetch with Operations

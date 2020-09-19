@@ -9,8 +9,6 @@
 import Foundation
 
 class NetworkOperation: Operation {
-    static let shared = NetworkService()
-    
     private let session = URLSession(configuration: .default)
     private var task: URLSessionTask?
     

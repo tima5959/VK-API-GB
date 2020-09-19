@@ -8,6 +8,7 @@
 
 import Foundation
 
+// MARK: - AsyncOperation
 class AsyncOperation: Operation {
     
     enum State: String {
@@ -21,14 +22,14 @@ class AsyncOperation: Operation {
     }
     
     var state = State.ready {
-        didSet {
-            didChangeValue(forKey: state.keyPath)
-            didChangeValue(forKey: oldValue.keyPath)
-        }
-        
         willSet {
             willChangeValue(forKey: state.keyPath)
             willChangeValue(forKey: newValue.keyPath)
+        }
+        
+        didSet {
+            didChangeValue(forKey: state.keyPath)
+            didChangeValue(forKey: oldValue.keyPath)
         }
     }
     
@@ -63,7 +64,7 @@ class AsyncOperation: Operation {
     }
 }
 
-
+// MARK: - NetworkAsyncOperation
 class NetworkAsyncOperation: AsyncOperation {
     private let session = URLSession(configuration: .default)
     private var task: URLSessionTask?
@@ -75,7 +76,7 @@ class NetworkAsyncOperation: AsyncOperation {
     private let version = "5.122"
     private let autorizeHost = "oauth.vk.com"
     
-    var groupsCommunities: Data?
+    var newsCommunities: Data?
     
     override func main() {
         fetchCommunities()
@@ -86,43 +87,48 @@ class NetworkAsyncOperation: AsyncOperation {
         super.cancel()
     }
     
-    // MARK: - Fetch communities request
-    func fetchCommunities() {
+    private func fetchCommunities() {
         urlComponents.scheme = scheme
         urlComponents.host = vkApiHost
-        urlComponents.path = "/method/groups.get"
+        urlComponents.path = "/method/newsfeed.get"
         urlComponents.queryItems = [
-            .init(name: "user_ids", value: "\(userID)"),
-            .init(name: "extended", value: "1"),
+            .init(name: "start_from", value: "next_from"),
+            .init(name: "filters", value: "post"),
+            .init(name: "max_photos", value: "0"),
+            .init(name: "count", value: "20"),
             .init(name: "access_token", value: Session.shared.token),
             .init(name: "v", value: version)
         ]
         
-        guard let url = urlComponents.url else { preconditionFailure("loadGroups network methods is failure") }
+        guard let url = urlComponents.url else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
-        task = self.session.dataTask(with: request) { data, response, error in
+        session.dataTask(with: request) { data, response, error in
             if let error = error {
                 print(error.localizedDescription)
                 return
             }
+            
             guard let data = data else { return }
-            self.groupsCommunities = data
+            self.newsCommunities = data
             self.state = .finished
-        }
-        task?.resume()
+        }.resume()
     }
 }
 
-
+// MARK: - ParseCommunitiesOperation
 class ParseCommunitiesOperation: Operation {
     
     var parseData: [NewsFeedModel]?
     
     override func main() {
+        parseNews()
+    }
+    
+    private func parseNews() {
         guard let dependenci = dependencies.first as? NetworkAsyncOperation,
-            let data = dependenci.groupsCommunities else { return }
+            let data = dependenci.newsCommunities else { return }
         
         do {
             var news = try JSONDecoder()
@@ -154,10 +160,9 @@ class ParseCommunitiesOperation: Operation {
             print(error.localizedDescription)
         }
     }
-    
 }
 
-
+// MARK: - ReloadTableController
 class ReloadTableController: Operation {
     
     var controller: NewsViewController
@@ -169,8 +174,11 @@ class ReloadTableController: Operation {
     override func main() {
         guard let parseCommunitiesData = dependencies.first as? ParseCommunitiesOperation,
             let data = parseCommunitiesData.parseData else { return }
-        controller.model = data
-        controller.tableView.reloadData()
+        OperationQueue.main.addOperation {    
+            self.controller.model = data
+            self.controller.tableView.reloadData()
+        }
+        
     }
     
 }
