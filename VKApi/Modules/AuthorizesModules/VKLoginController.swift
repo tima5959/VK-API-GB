@@ -28,11 +28,8 @@ extension VKLoginController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
         
         guard let url = navigationResponse.response.url,
-            url.path == "/blank.html",
-            let fragment = url.fragment  else {
-                decisionHandler(.allow)
-                return
-        }
+                  url.path == "/blank.html",
+                  let fragment = url.fragment else { decisionHandler(.allow); return }
         
         let params = fragment
             .components(separatedBy: "&")
@@ -60,8 +57,4 @@ extension VKLoginController: WKNavigationDelegate {
         performSegue(withIdentifier: "webViewOAuth", sender: nil)
         decisionHandler(.cancel)
     }
-    
-    
-    
 }
-

@@ -21,9 +21,12 @@ class GroupesTableViewController: UITableViewController {
     private var notificationToken: NotificationToken?
     private var model: Results<Groups>?
     private var groups: [Groups] = []
+    private var filteredGroups = [Groups]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        title = "Группы"
         
         let refreshControll = UIRefreshControl()
         refreshControll.addTarget(self,
@@ -43,7 +46,7 @@ class GroupesTableViewController: UITableViewController {
         searchController.obscuresBackgroundDuringPresentation = false
         
         // 3 Здесь мы устанавливаем плейсхолдер текстфилду
-        searchController.searchBar.placeholder = "Search Users"
+        searchController.searchBar.placeholder = "Поиск групп"
         
         // 4 New for iOS 11, you add the searchBar to the navigationItem. This is necessary because Interface Builder is not yet compatible with UISearchController.
         // 4 Новое в iOS 11 мы добавляем searchBar в панельНавигации. Этого еще нет в сторибордах
@@ -67,7 +70,9 @@ class GroupesTableViewController: UITableViewController {
         })
     }
     
-    func setNotificationToken() {
+    // Установил наблюдателя за моделью в базе данных
+    // В случае изменения база данных сама обновит таблицу
+    private func setNotificationToken() {
         model = try? storageManager.fetchByRealm(items: Groups.self)
         notificationToken = model?.observe { changes in
             switch changes {
@@ -83,49 +88,63 @@ class GroupesTableViewController: UITableViewController {
         }
     }
     
-    // MARK: - Table view data source
+    // При оттягивании таблицы внизу будет повторно отправлен запрос
     @objc func refreshFunc() {
-        networkService.getLoadGroups(handler: { [weak self] community in
+        networkService.getLoadGroups() { [weak self] community in
             self?.groups = community
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
             }
             self?.tableView.refreshControl?.endRefreshing()
-        })
+        }
     }
-    
+}
+
+// MARK: - Table view data source
+extension GroupesTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if isFiltering {
+            return filteredGroups.count
+        }
         return groups.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "groupMainCell", for: indexPath) as! GroupesTableViewCell
         
-        let group = groups[indexPath.row]
-        cell.groupNamedLabel.text = group.name
-//        cell.imageViewOutlet.image = networkService.setPhoto(atIndexPath: indexPath, byUrl: group.avatarURL)
-        cell.imageViewOutlet.kf.setImage(with: URL(string: group.avatarURL), options: [
-            .transition(.fade(0.5))
-        ])
+        let groupModel: Groups
         
+        if isFiltering {
+            groupModel = filteredGroups[indexPath.row]
+        } else {
+            groupModel = groups[indexPath.row]
+        }
+
+        cell.groupNamedLabel.text = groupModel.name
+        fetchAvatar(groupModel, cell)
         return cell
+//        cell.imageViewOutlet.kf.setImage(with: URL(string: group.avatarURL), options: [
+//            .transition(.fade(0.5))
+//        ])
     }
     
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-       
+    private func fetchAvatar(_ model: Groups,
+                             _ cell: GroupesTableViewCell) {
+        networkService.fetchAndCachedPhoto(
+            from: model.avatarURL) { image in
+            cell.imageViewOutlet.image = image
+        } completionError: { error in
+            cell.imageViewOutlet.image = UIImage(named: "")
         }
     }
 }
 
+
+// MARK: - UISerchBar
 extension GroupesTableViewController: UISearchResultsUpdating {
     // isSearchBarEmpty возвращает true, если текст, введенный в строке поиска, пуст; в противном случае возвращается false.
     var isSearchBarEmpty: Bool {
@@ -139,12 +158,18 @@ extension GroupesTableViewController: UISearchResultsUpdating {
     
     // filterContentFor(_ searchText: String) фильтрует группы на основе searchText и помещает результаты в фильтр filteredGroups
     func filterContentFor(_ searchText: String) {
-        networkService.findGroups(searchText) { [weak self] communities in
-            self?.groups = communities
-            DispatchQueue.main.async {
-                self?.tableView.reloadData()
-            }
+        filteredGroups = groups.filter { group -> Bool in
+            return group
+                .name
+                .lowercased()
+                .contains(searchText.lowercased())
         }
+//        networkService.findGroups(searchText) { [weak self] communities in
+//            self?.groups = communities
+//            DispatchQueue.main.async {
+//                self?.tableView.reloadData()
+//            }
+//        }
         tableView.reloadData()
     }
     

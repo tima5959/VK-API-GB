@@ -10,14 +10,19 @@ import UIKit
 
 class NewsViewController: UITableViewController {
     
-    private let network = NetworkService()
     var model: [NewsFeedModel] = []
-    
+    private let networkService = NetworkService()
     private let customRefreshControll = UIRefreshControl()
     
     // Create my own operation queue
     // Создаел свою очередь операции
     private let operationQ = OperationQueue()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        title = "Новости"
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         tableView.estimatedRowHeight = UITableView.automaticDimension
@@ -28,7 +33,10 @@ class NewsViewController: UITableViewController {
         
 //        fetchNews()
 //        fetchNewsOperations()
-        
+        operationsMethods()
+    }
+    
+    private func operationsMethods() {
         let fetchNewsData = NetworkAsyncOperation()
         operationQ.addOperation(fetchNewsData)
         
@@ -59,7 +67,7 @@ class NewsViewController: UITableViewController {
     // MARK: Asyncronology fetch with GCD
     private func fetchNews() {
         DispatchQueue.global().async {
-            self.network.getNews({ [weak self] (news) in
+            self.networkService.getNews({ [weak self] (news) in
                 guard let self = self else { return }
                 self.model = news
                 DispatchQueue.main.async {
@@ -91,7 +99,12 @@ class NewsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "newsTableViewCell", for: indexPath) as! NewsTableViewCell
         
-        cell.configure(model, at: indexPath)
+        let news = model[indexPath.row]
+        let height = calculateImageHeight(news)
+        
+        cell.configureCell(byData: news,
+                           contentPhotoHeight: height,
+                           networkService: networkService)
         
         return cell
     }
@@ -102,5 +115,27 @@ class NewsViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         return tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    private func calculateImageHeight(_ news: NewsFeedModel) -> CGFloat {
+        
+        let contentData = news.attachments?.first?.photo?.sizes?.first
+        
+        guard let height = contentData?.height,
+              let width = contentData?.width else {
+            return 2
+        }
+        
+        let photoHeight = height
+        let photoWidth = width
+        
+        var ratio: CGFloat = 1.0000
+        
+        if photoHeight != 0 {
+            ratio = CGFloat(photoWidth) / CGFloat(photoHeight)
+        }
+        
+        let calculatedPhotoHeight = tableView.frame.width / ratio
+        return calculatedPhotoHeight
     }
 }

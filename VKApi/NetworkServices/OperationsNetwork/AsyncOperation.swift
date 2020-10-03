@@ -174,7 +174,7 @@ class ReloadTableController: Operation {
     override func main() {
         guard let parseCommunitiesData = dependencies.first as? ParseCommunitiesOperation,
             let data = parseCommunitiesData.parseData else { return }
-        OperationQueue.main.addOperation {    
+        OperationQueue.main.addOperation {
             self.controller.model = data
             self.controller.tableView.reloadData()
         }

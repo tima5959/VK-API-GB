@@ -22,6 +22,7 @@ final class NetworkService {
     private let autorizeHost = "oauth.vk.com"
     
     var images = [String: UIImage]()
+    var imagesCache = NSCache<NSString, UIImage>()
     
     // MARK: - Authorized request
     func getAuthorized() -> URLRequest {
@@ -63,7 +64,7 @@ final class NetworkService {
                 return
             }
             guard let data = data,
-                let friendsModelData = try? JSONDecoder().decode(Response<Friend>.self, from: data).response.items else { return }
+                  let friendsModelData = try? JSONDecoder().decode(Response<Friend>.self, from: data).response.items else { return }
             DispatchQueue.main.async {
                 handler(friendsModelData)
             }
@@ -93,7 +94,7 @@ final class NetworkService {
             }
             
             guard let data = data,
-                let groups = try? JSONDecoder().decode(Response<Groups>.self, from: data).response.items else { return }
+                  let groups = try? JSONDecoder().decode(Response<Groups>.self, from: data).response.items else { return }
             DispatchQueue.main.async {
                 handler(groups)
             }
@@ -135,7 +136,7 @@ final class NetworkService {
         
     }
     
-    // MARK: - Fetch all photos request
+    // MARK: - Find communities request
     func findGroups(_ text: String, completionHandler: @escaping ([Groups]) -> Void) {
         urlComponents.scheme = scheme
         urlComponents.host = vkApiHost
@@ -165,7 +166,7 @@ final class NetworkService {
         }.resume()
     }
     
-    // MARK: - Find communities request
+    // MARK: - Fetch News Request
     func getNews(_ completionHandler: @escaping ([NewsFeedModel]) -> Void,
                  _ completionError: @escaping (Bool) -> Void) {
         urlComponents.scheme = scheme
@@ -192,12 +193,15 @@ final class NetworkService {
             }
             guard let data = data else { return }
             do {
-                var news = try JSONDecoder().decode(Response<NewsFeedModel>.self,
-                                                    from: data).response.items
-                print(news.count)
-                let groups = try JSONDecoder().decode(ResponseNews.self, from: data).response?.groups
-                let friends = try JSONDecoder().decode(ResponseNews.self, from: data).response?.profiles
-                //            let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                var news = try JSONDecoder().decode(Response<NewsFeedModel>.self, from: data)
+                    .response
+                    .items
+                let groups = try JSONDecoder().decode(ResponseNews.self, from: data)
+                    .response?
+                    .groups
+                let friends = try JSONDecoder().decode(ResponseNews.self, from: data)
+                    .response?
+                    .profiles
                 
                 for i in 0..<news.count {
                     if news[i].sourceID ?? 0 < 0 {
@@ -219,4 +223,48 @@ final class NetworkService {
             }
         }.resume()
     }
+    
+    
+    // MARK: - Photo fetch and Caching method
+    
+    func fetchAndCachedPhoto(from urlString: String,
+                             completionHandler: @escaping (UIImage?) -> Void,
+                             completionError: @escaping (Error?) -> Void) {
+        
+        let cacheKey = NSString(string: urlString)
+        if let image = imagesCache.object(forKey: cacheKey) {
+            DispatchQueue.main.async {
+                completionHandler(image)
+            }
+            return
+        }
+        
+        guard let url = URL(string: urlString) else {
+            DispatchQueue.main.async {
+                completionError(nil)
+            }
+            return
+        }
+        
+        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            guard let self = self,
+                  error == nil,
+                  let response = response as? HTTPURLResponse, response.statusCode == 200,
+                  let data = data,
+                  let image = UIImage(data: data) else {
+                DispatchQueue.main.async {
+                    completionError(nil)
+                }
+                return
+            }
+            
+            self.imagesCache.setObject(image, forKey: cacheKey)
+            
+            DispatchQueue.main.async {
+                completionHandler(image)
+            }
+        }
+        task.resume()
+    }
+    
 }

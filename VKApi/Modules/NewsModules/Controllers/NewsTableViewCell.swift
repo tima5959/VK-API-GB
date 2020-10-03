@@ -11,8 +11,6 @@ import Kingfisher
 
 class NewsTableViewCell: UITableViewCell {
     
-    private var groups: [Groups] = []
-    
     private let numberOfRows = 1
     private let columns: CGFloat = 1.0
     private let inset: CGFloat = 8.0
@@ -26,6 +24,7 @@ class NewsTableViewCell: UITableViewCell {
             avatarImageView.layer.cornerRadius = avatarImageView.frame.width / 2
         }
     } // Аватар новости
+    
     @IBOutlet weak var titleNewsFeed: UILabel!        // Название автора новости
     @IBOutlet weak var lastOnlineTime: UILabel!       // Последнее время онлайн
     
@@ -40,16 +39,19 @@ class NewsTableViewCell: UITableViewCell {
     @IBOutlet weak var likeTitleAction: UIStackView!  // Стек кнопки лайка и лейбла количества лайков
     @IBOutlet weak var shareTitleAction: UIStackView! // Стек кнопки репоста и лейбла количества репостов
     // TODO: Заменить ИмеджВью на КоллекшнВью
-    @IBOutlet weak var animateImageView: UIImageView! // Имедж вью
+    @IBOutlet weak var contentImageView: UIImageView! // Имедж вью
+    @IBOutlet weak var heightContentImageView: NSLayoutConstraint!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        
+        titleNewsFeed.backgroundColor = .white
+        lastOnlineTime.backgroundColor = .white
+        avatarImageView.backgroundColor = .white
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(tapToImage))
-        animateImageView.addGestureRecognizer(gesture)
-        animateImageView.isUserInteractionEnabled = true
+        contentImageView.addGestureRecognizer(gesture)
+        contentImageView.isUserInteractionEnabled = true
     }
     
     @IBAction func likeHeartAction(_ sender: UIButton) {
@@ -79,25 +81,47 @@ class NewsTableViewCell: UITableViewCell {
                        initialSpringVelocity: 1,
                        options: [.autoreverse],
                        animations: { [unowned self] in
-                        self.animateImageView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-        }) { [unowned self] _ in
-            self.animateImageView.transform = .identity
+                        self.contentImageView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+                       }) { [unowned self] _ in
+            self.contentImageView.transform = .identity
         }
     }
     
-    func configure(_ data: [NewsFeedModel], at indexPath: IndexPath) -> Void {
-        let news = data[indexPath.row]
+    func configureCell(byData: NewsFeedModel,
+                       contentPhotoHeight: CGFloat,
+                       networkService: NetworkService?) -> Void {
         
-        avatarImageView.kf.setImage(with: URL(string: news.avatarURL ?? ""))
-        
-        animateImageView.kf.setImage(with: URL(string: news.attachments?.first?.photo?.sizes?.last?.url ?? ""))
-        titleNewsFeed.text = news.name
-        newsTitleText.text = news.text
-        likeCountTitle.text = String("\(news.likes.count)")
-        shareCountTitle.text = String("\(news.reposts.count)")
-        viewsCountTitle.text = String("\(news.views.count)")
+        if let network = networkService {
+            network.fetchAndCachedPhoto(
+                from: byData.avatarURL ?? "",
+                completionHandler: { image in
+                    self.avatarImageView.image = image
+                }, completionError: { error in
+                    self.avatarImageView.image = UIImage(named: "")
+                })
             
-        lastOnlineTime.text = news.publicationTime(timeIntervalSince1970: news.date)
+            network.fetchAndCachedPhoto(
+                from: (byData.attachments?.first?.photo?.sizes?.last?.url) ?? ""
+            ) { image in
+                self.contentImageView.image = image
+            } completionError: { error in
+                self.contentImageView.image = UIImage(named: "")
+            }
+            
+        }
+        
+//        avatarImageView.kf.setImage(with: URL(string: byData.avatarURL ?? ""))
+//        contentImageView.kf.setImage(with: URL(string: byData.attachments?.first?.photo?.sizes?.last?.url ?? ""))
+        
+        titleNewsFeed.text = byData.name
+        newsTitleText.text = byData.text
+        likeCountTitle.text = String("\(byData.likes.count)")
+        shareCountTitle.text = String("\(byData.reposts.count)")
+        viewsCountTitle.text = String("\(byData.views.count)")
+        
+        lastOnlineTime.text = byData.publicationTime(timeIntervalSince1970: byData.date)
+        
+        heightContentImageView.constant = contentPhotoHeight
     }
 }
 

@@ -12,7 +12,7 @@ import Kingfisher
 
 class FriendsTableViewController: UITableViewController {
     
-    let networkManager = NetworkService()
+    let networkService = NetworkService()
     let storageManager = RealmService()
     
     private let searchController = UISearchController(searchResultsController: nil)
@@ -26,6 +26,7 @@ class FriendsTableViewController: UITableViewController {
     
     private let realm = try! Realm()
     private var friends = [Friend]()
+    private var filteredFriends = [Friend]()
     private var users: Results<Friend>!
     
     private var sortedFirstLetters: [String] = []
@@ -33,6 +34,8 @@ class FriendsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        title = "Друзья"
         
         setNotificationToken()
         
@@ -47,7 +50,7 @@ class FriendsTableViewController: UITableViewController {
         searchController.obscuresBackgroundDuringPresentation = false
         
         // 3 Здесь мы устанавливаем плейсхолдер текстфилду
-        searchController.searchBar.placeholder = "Search Users"
+        searchController.searchBar.placeholder = "Поиск друзей"
         
         // 4 New for iOS 11, you add the searchBar to the navigationItem. This is necessary because Interface Builder is not yet compatible with UISearchController.
         // 4 Новое в iOS 11 мы добавляем searchBar в панельНавигации. Этого еще нет в сторибордах
@@ -104,49 +107,6 @@ class FriendsTableViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    // MARK: - Table view data source
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return sections.count
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sections[section].count
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? FriendsTableViewCell else { return UITableViewCell() }
-        
-        let model = sections[indexPath.section][indexPath.row]
-        cell.nameLabel.text = model.firstName + " " + model.lastName
-        //        cell.avatarImageView.image = networkManager.setPhoto(atIndexPath: indexPath,
-        //                                                             byUrl: model.avatarURL)
-        //        cell.avatarImageView.loadImage(fromURL: model.avatarURL)
-        cell.avatarImageView.kf.setImage(with: URL(string: model.avatarURL),
-                                         options: [.transition(.fade(0.5))])
-        
-        return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    // MARK: - Sections
-    
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        sortedFirstLetters[section]
-    }
-    
-    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        sortedFirstLetters
-    }
-    
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-        }
-    }
-    
     // MARK: - Navigation
     // При использовании сторибордов, необходимо подготовить переход (передача данных)
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -167,6 +127,130 @@ class FriendsTableViewController: UITableViewController {
         }
     }
 }
+
+// MARK: - TableViewDataSource
+extension FriendsTableViewController {
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        if isFiltering {
+            return 1
+        }
+        
+        return sections.count
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if isFiltering {
+            filteredFriends.count
+        }
+        
+        return sections[section].count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? FriendsTableViewCell else { return UITableViewCell() }
+        
+        let friend: Friend			    	
+        
+        if isFiltering {
+            friend = filteredFriends[indexPath.row]
+        } else {
+            friend = sections[indexPath.section][indexPath.row]
+        }
+        
+        cell.nameLabel.text = friend.firstName + " " + friend.lastName
+        fetchAvatar(friend, cell)
+        
+        return cell
+        
+        
+//        networkService.fetchAndCachedPhoto(
+//            from: model.avatarURL) { image in
+//            cell.avatarImageView.image = image
+//        } completionError: { error in
+//            cell.avatarImageView.image = UIImage(named: "")
+//        }
+        
+//        cell.avatarImageView.kf.setImage(with: URL(string: model.avatarURL), options: [.transition(.fade(0.5))])
+    }
+    
+    private func fetchAvatar(_ model: Friend,
+                             _ cell: FriendsTableViewCell) {
+        networkService.fetchAndCachedPhoto(
+            from: model.avatarURL) { image in
+            cell.avatarImageView.image = image
+        } completionError: { error in
+            cell.avatarImageView.image = UIImage(named: "")
+        }
+    }
+}
+
+extension FriendsTableViewController {
+    // MARK: - Sections
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if isFiltering {
+            return ""
+        }
+        
+        return sortedFirstLetters[section]
+    }
+    
+    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        if isFiltering {
+            return [""]
+        }
+        return sortedFirstLetters
+    }
+}
+
+// MARK: - UISearchResultsUpdating, UISearchBarDelegate
+extension FriendsTableViewController: UISearchResultsUpdating, UISearchBarDelegate {
+    
+    // isSearchBarEmpty возвращает true, если текст, введенный в строке поиска, пуст; в противном случае возвращается false.
+    var isSearchBarEmpty: Bool {
+        return searchController.searchBar.text?.isEmpty ?? true
+    }
+    
+    // Вычисляемое свойство, определяющее, фильтруете ли вы в настоящее время результаты или нет
+    var isFiltering: Bool {
+        return searchController.isActive && !searchBarIsEmpty
+    }
+    
+    // Вычисляемое свойство, определяющее, пустой ли серчбар или нет
+    var searchBarIsEmpty: Bool {
+        guard let text = searchController.searchBar.text else { return false }
+        return text.isEmpty
+    }
+    
+    func filterContentFor(_ searchText: String) {
+        filteredFriends = friends.filter { friends -> Bool in
+            return friends
+                .firstName
+                .lowercased()
+                .contains(searchText.lowercased())
+        }
+        tableView.reloadData()
+    }
+    
+    // Теперь всякий раз, когда пользователь добавляет или удаляет текст в строке поиска, UISearchController будет информировать класс FriendsTableViewController об изменении посредством вызова updateSearchResults(for:), который, в свою очередь, вызывает filterContentFor(_ searchText:).
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchBar = searchController.searchBar
+        filterContentFor(searchBar.text!)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.searchController.searchBar.endEditing(true)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        view.endEditing(true)
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        self.tableView.isUserInteractionEnabled = false
+    }
+}
+
 
 // MARK: - Alert Controller
 extension FriendsTableViewController {
@@ -201,45 +285,3 @@ extension FriendsTableViewController {
     }
 }
 
-// MARK: - UISearchResultsUpdating, UISearchBarDelegate
-extension FriendsTableViewController: UISearchResultsUpdating, UISearchBarDelegate {
-    
-    // isSearchBarEmpty возвращает true, если текст, введенный в строке поиска, пуст; в противном случае возвращается false.
-    var isSearchBarEmpty: Bool {
-        return searchController.searchBar.text?.isEmpty ?? true
-    }
-    
-    // Вычисляемое свойство, определяющее, фильтруете ли вы в настоящее время результаты или нет
-    var isFiltering: Bool {
-        return searchController.isActive && !searchBarIsEmpty
-    }
-    
-    // Вычисляемое свойство, определяющее, пустой ли серчбар или нет
-    var searchBarIsEmpty: Bool {
-        guard let text = searchController.searchBar.text else { return false }
-        return text.isEmpty
-    }
-    
-    func filterContentFor(_ searchText: String) {
-        // TODO: Add search methods
-    }
-    
-    // Теперь всякий раз, когда пользователь добавляет или удаляет текст в строке поиска, UISearchController будет информировать класс FriendsTableViewController об изменении посредством вызова updateSearchResults(for:), который, в свою очередь, вызывает filterContentFor(_ searchText:).
-    func updateSearchResults(for searchController: UISearchController) {
-        let searchBar = searchController.searchBar
-        filterContentFor(searchBar.text!)
-    }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        self.searchController.searchBar.endEditing(true)
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        view.endEditing(true)
-    }
-    
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        self.tableView.isUserInteractionEnabled = false
-    }
-}

@@ -29,8 +29,6 @@
 		B5DAC14124CDE8F00081C6E2 /* FriendsDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DAC14024CDE8F00081C6E2 /* FriendsDetailCollectionViewCell.swift */; };
 		B5DAC14624CDE96C0081C6E2 /* GroupesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DAC14524CDE96C0081C6E2 /* GroupesTableViewController.swift */; };
 		B5DAC14824CDE9810081C6E2 /* GroupesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DAC14724CDE9810081C6E2 /* GroupesTableViewCell.swift */; };
-		B5DAC14A24CDE98B0081C6E2 /* DetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DAC14924CDE98B0081C6E2 /* DetailTableViewCell.swift */; };
-		B5DAC14C24CDE99B0081C6E2 /* DetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DAC14B24CDE99B0081C6E2 /* DetailTableViewController.swift */; };
 		B5EA886024E9745A002C13E0 /* Friend.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EA885F24E9745A002C13E0 /* Friend.swift */; };
 		B5EA886224E9872D002C13E0 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EA886124E9872D002C13E0 /* Response.swift */; };
 		B5EA886824E9A3E0002C13E0 /* Groups.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EA886724E9A3E0002C13E0 /* Groups.swift */; };
@@ -66,8 +64,6 @@
 		B5DAC14024CDE8F00081C6E2 /* FriendsDetailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsDetailCollectionViewCell.swift; sourceTree = "<group>"; };
 		B5DAC14524CDE96C0081C6E2 /* GroupesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupesTableViewController.swift; sourceTree = "<group>"; };
 		B5DAC14724CDE9810081C6E2 /* GroupesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupesTableViewCell.swift; sourceTree = "<group>"; };
-		B5DAC14924CDE98B0081C6E2 /* DetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTableViewCell.swift; sourceTree = "<group>"; };
-		B5DAC14B24CDE99B0081C6E2 /* DetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTableViewController.swift; sourceTree = "<group>"; };
 		B5EA885F24E9745A002C13E0 /* Friend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Friend.swift; sourceTree = "<group>"; };
 		B5EA886124E9872D002C13E0 /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		B5EA886724E9A3E0002C13E0 /* Groups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Groups.swift; sourceTree = "<group>"; };
@@ -265,18 +261,8 @@
 			isa = PBXGroup;
 			children = (
 				B5DAC14424CDE9230081C6E2 /* MainGroupesController */,
-				B5DAC14324CDE91F0081C6E2 /* DetailGroupesController */,
 			);
 			path = GroupsModules;
-			sourceTree = "<group>";
-		};
-		B5DAC14324CDE91F0081C6E2 /* DetailGroupesController */ = {
-			isa = PBXGroup;
-			children = (
-				B5DAC14B24CDE99B0081C6E2 /* DetailTableViewController.swift */,
-				B5DAC14924CDE98B0081C6E2 /* DetailTableViewCell.swift */,
-			);
-			path = DetailGroupesController;
 			sourceTree = "<group>";
 		};
 		B5DAC14424CDE9230081C6E2 /* MainGroupesController */ = {
@@ -369,7 +355,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1160;
-				LastUpgradeCheck = 1160;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "Тимур Фатулоев";
 				TargetAttributes = {
 					B5B69AF424CC85A600E9B552 = {
@@ -457,7 +443,6 @@
 			files = (
 				B52EE8DE24E5C5E500176EAA /* VKLoginController.swift in Sources */,
 				B5DAC14824CDE9810081C6E2 /* GroupesTableViewCell.swift in Sources */,
-				B5DAC14C24CDE99B0081C6E2 /* DetailTableViewController.swift in Sources */,
 				B5EA886824E9A3E0002C13E0 /* Groups.swift in Sources */,
 				B5FC403924D44CBB00B56697 /* NewsTableViewCell.swift in Sources */,
 				B5B69AFD24CC85A600E9B552 /* ViewController.swift in Sources */,
@@ -477,7 +462,6 @@
 				B569877524FBDFEE009933D1 /* Photo.swift in Sources */,
 				B5DAC14624CDE96C0081C6E2 /* GroupesTableViewController.swift in Sources */,
 				B550E32924EEF50600C42755 /* RealmService.swift in Sources */,
-				B5DAC14A24CDE98B0081C6E2 /* DetailTableViewCell.swift in Sources */,
 				B5EA886024E9745A002C13E0 /* Friend.swift in Sources */,
 				B5DAC13A24CDE8720081C6E2 /* FriendsDetailCollectionViewController.swift in Sources */,
 				B5FC403D24D44D9D00B56697 /* NewsViewController.swift in Sources */,
@@ -524,6 +508,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -584,6 +569,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
