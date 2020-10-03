@@ -29,8 +29,14 @@ class FriendsTableViewController: UITableViewController {
     private var filteredFriends = [Friend]()
     private var users: Results<Friend>!
     
-    private var sortedFirstLetters: [String] = []
-    private var sections: [[Friend]] = [[]]
+    private var sortedFriends: [Character: [Friend]] = [:]
+    
+    private var sortedFirstLetters: [Character] {
+        get {
+            sortedFriends.keys.sorted()
+        }
+    }
+//    private var sections: [[Friend]] = [[]]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,40 +72,63 @@ class FriendsTableViewController: UITableViewController {
         setNotificationToken()
     }
     
-    private func setFirstLetters() {
-        // Проверяю Realm<Result>
+    private func sortingFriends() {
         guard let users = self.users else { return }
-        // Фильтрую друзей по имени и проверяю на nil
-        let filteredFriends = users.filter { !$0.firstName.isEmpty }
-        // Добавляю в массив типа [Friend] отфильтрованных по имени друзей
-        self.friends = Array(filteredFriends)
-        // Передаю в функцию модели Friends массив отфильтрованных по имени друзей
-        // Чтобы получить первую букву их имени
-        let firstLetters = friends.map { $0.titleFirstLetter }
-        // Убираю повторяющиеся буквы
-        let uniqueFirstLetters = Array(Set(firstLetters))
-        // Сортирую буквы
-        sortedFirstLetters = uniqueFirstLetters.sorted()
-        // Добавляю в [[sections]] буквы
-        // Возвращаю [Friend] отфильрованный по этим буквам
-        // Возвращаю [Friend] отсортированный от А до Я || от A до Z
-        sections = sortedFirstLetters.map { firstLetter in
-            return friends.filter { $0.titleFirstLetter == firstLetter }.sorted { $0.firstName < $1.firstName }
-        }
+        let filterFriends = users.filter { !$0.firstName.isEmpty }
+        self.friends = Array(filterFriends)
+        sortedFriends = sortingFriendsByName(Array(filterFriends))
         self.tableView.reloadData()
     }
     
+    private func sortingFriendsByName(_ friends: [Friend]) -> [Character: [Friend]] {
+        let friend: [Friend]
+        friend = friends
+        
+        let sortedFriend = Dictionary
+            .init(grouping: friend) { $0.firstName.lowercased().first ?? "#"}
+            .mapValues { $0.sorted { $0.firstName.lowercased() < $1.firstName.lowercased()
+            }
+        }
+        return sortedFriend
+    }
+    
+//    private func setFirstLetters() {
+//        // Проверяю Realm<Result>
+//        guard let users = self.users else { return }
+//        // Фильтрую друзей по имени и проверяю на nil
+//        let filteredFriends = users.filter { !$0.firstName.isEmpty }
+//        // Добавляю в массив типа [Friend] отфильтрованных по имени друзей
+//        self.friends = Array(filteredFriends)
+//        // Передаю в функцию модели Friends массив отфильтрованных по имени друзей
+//        // Чтобы получить первую букву их имени
+//        let firstLetters = friends.map { $0.titleFirstLetter }
+//        // Убираю повторяющиеся буквы
+//        let uniqueFirstLetters = Array(Set(firstLetters))
+//        // Сортирую буквы
+//        sortedFirstLetters = uniqueFirstLetters.sorted()
+//        // Добавляю в [[sections]] буквы
+//        // Возвращаю [Friend] отфильрованный по этим буквам
+//        // Возвращаю [Friend] отсортированный от А до Я || от A до Z
+//        sections = sortedFirstLetters.map { firstLetter in
+//            return friends.filter { $0.titleFirstLetter == firstLetter }.sorted { $0.firstName < $1.firstName }
+//        }
+//        self.tableView.reloadData()
+//    }
+    
     private func setNotificationToken() {
         users = try? storageManager.fetchByRealm(items: Friend.self)
-        setFirstLetters()
+//        setFirstLetters()
+        sortingFriends()
         notificationToken = users?.observe { changes in
             switch changes {
             case .initial(_):
                 self.storageManager.fetchFriends()
-                self.setFirstLetters()
+//                self.setFirstLetters()
+                self.sortingFriends()
             case .update(_, _, _, _):
                 self.storageManager.fetchFriends()
-                self.setFirstLetters()
+//                self.setFirstLetters()
+                self.sortingFriends()
             case .error(let error):
                 print(error.localizedDescription)
             }
@@ -113,7 +142,9 @@ class FriendsTableViewController: UITableViewController {
         guard segue.identifier == "detailFriendsTableViewSegue" else { return }
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
         
-        let model = sections[indexPath.section][indexPath.row]
+//        let model = sections[indexPath.section][indexPath.row]
+        let users = sortedFriends[sortedFirstLetters[indexPath.section]]
+        guard let model = users?[indexPath.row] else { return }
         let friendsDetailVC = segue.destination as! FriendsDetailCollectionViewController
         friendsDetailVC.navigationController?.title = model.firstName + " " + model.lastName
         friendsDetailVC.ownerID = model.id
@@ -135,7 +166,8 @@ extension FriendsTableViewController {
             return 1
         }
         
-        return sections.count
+//        return sections.count
+        return sortedFirstLetters.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -143,18 +175,26 @@ extension FriendsTableViewController {
             filteredFriends.count
         }
         
-        return sections[section].count
+//        return sections[section].count
+        let key = sortedFirstLetters[section]
+        return sortedFriends[key]?.count ?? 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? FriendsTableViewCell else { return UITableViewCell() }
         
-        let friend: Friend			    	
+        let friend: Friend
         
         if isFiltering {
             friend = filteredFriends[indexPath.row]
         } else {
-            friend = sections[indexPath.section][indexPath.row]
+//            friend = sections[indexPath.section][indexPath.row]
+            let key = sortedFirstLetters[indexPath.section]
+            let friends = sortedFriends[key]
+            guard let userFriend = friends?[indexPath.row] else {
+                return cell
+            }
+            friend = userFriend
         }
         
         cell.nameLabel.text = friend.firstName + " " + friend.lastName
@@ -191,14 +231,18 @@ extension FriendsTableViewController {
             return ""
         }
         
-        return sortedFirstLetters[section]
+//        return sortedFirstLetters[section]
+        return String(sortedFirstLetters[section].uppercased())
     }
+   
     
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
         if isFiltering {
             return [""]
         }
-        return sortedFirstLetters
+        
+        let users = String(sortedFirstLetters).uppercased()
+        return [users]
     }
 }
 
