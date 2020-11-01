@@ -182,3 +182,23 @@ class ReloadTableController: Operation {
     }
     
 }
+
+class ReloadCollectionController: Operation {
+    
+    var controller: NewsCollectionViewController
+    
+    init(_ controller: NewsCollectionViewController) {
+        self.controller = controller
+    }
+    
+    override func main() {
+        guard let parseCommunitiesData = dependencies.first as? ParseCommunitiesOperation,
+              let data = parseCommunitiesData.parseData else { return }
+        
+        OperationQueue.main.addOperation {
+            self.controller.model = data
+            self.controller.collectionView.reloadData()
+        }
+    }
+    
+}

@@ -23,8 +23,12 @@ class GroupesTableViewController: UITableViewController {
     private var groups: [Groups] = []
     private var filteredGroups = [Groups]()
     
+    private var photoService: PhotoService?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        photoService = PhotoService(container: tableView)
         
         title = "Группы"
         
@@ -125,7 +129,13 @@ extension GroupesTableViewController {
         }
 
         cell.groupNamedLabel.text = groupModel.name
-        fetchAvatar(groupModel, cell)
+//        fetchAvatar(groupModel, cell)
+        DispatchQueue.main.async { [weak self] in
+            cell.imageViewOutlet.image = self?.photoService?.getImage(atIndexPath: indexPath, byUrl: groupModel.avatarURL)
+        }
+        
+        
+        
         return cell
 //        cell.imageViewOutlet.kf.setImage(with: URL(string: group.avatarURL), options: [
 //            .transition(.fade(0.5))
