@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22144AC3255736D300F86787 /* CommentsControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22144AC2255736D300F86787 /* CommentsControl.swift */; };
+		229B3143254A0FAA003FFFA8 /* PhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229B3142254A0FAA003FFFA8 /* PhotoService.swift */; };
 		9629370A82F66199F48424CD /* Pods_VKApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33EC894FDC5A6ECC074BED0E /* Pods_VKApi.framework */; };
 		B512384F251544D700ACF939 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512384E251544D700ACF939 /* AsyncOperation.swift */; };
 		B52354492513FAC800B7E86F /* NetworkServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52354482513FAC800B7E86F /* NetworkServices.swift */; };
@@ -14,7 +16,10 @@
 		B52EE8DC24E5C3BE00176EAA /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52EE8DB24E5C3BE00176EAA /* Session.swift */; };
 		B52EE8DE24E5C5E500176EAA /* VKLoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52EE8DD24E5C5E500176EAA /* VKLoginController.swift */; };
 		B52EE8E424E5E29E00176EAA /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B52EE8E324E5E29E00176EAA /* WebKit.framework */; };
+		B53E7246252BC5B600CA5F08 /* HeartControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53E7245252BC5B600CA5F08 /* HeartControl.swift */; };
 		B53FB72D24CF5CDA0009977E /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53FB72C24CF5CDA0009977E /* Extension.swift */; };
+		B54C30522529F986007B3604 /* NewsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54C30512529F986007B3604 /* NewsCollectionViewController.swift */; };
+		B54C305B2529F9D3007B3604 /* CellCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54C305A2529F9D3007B3604 /* CellCollectionViewCell.swift */; };
 		B550E32924EEF50600C42755 /* RealmService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B550E32824EEF50600C42755 /* RealmService.swift */; };
 		B569877524FBDFEE009933D1 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B569877424FBDFEE009933D1 /* Photo.swift */; };
 		B5B69AF924CC85A600E9B552 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B69AF824CC85A600E9B552 /* AppDelegate.swift */; };
@@ -39,6 +44,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		22144AC2255736D300F86787 /* CommentsControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsControl.swift; sourceTree = "<group>"; };
+		229B3142254A0FAA003FFFA8 /* PhotoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoService.swift; sourceTree = "<group>"; };
 		33EC894FDC5A6ECC074BED0E /* Pods_VKApi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VKApi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42E07992D5FB76B09D3A7511 /* Pods-VKApi.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKApi.release.xcconfig"; path = "Target Support Files/Pods-VKApi/Pods-VKApi.release.xcconfig"; sourceTree = "<group>"; };
 		B512384E251544D700ACF939 /* AsyncOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
@@ -47,7 +54,10 @@
 		B52EE8DB24E5C3BE00176EAA /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		B52EE8DD24E5C5E500176EAA /* VKLoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKLoginController.swift; sourceTree = "<group>"; };
 		B52EE8E324E5E29E00176EAA /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		B53E7245252BC5B600CA5F08 /* HeartControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartControl.swift; sourceTree = "<group>"; };
 		B53FB72C24CF5CDA0009977E /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		B54C30512529F986007B3604 /* NewsCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCollectionViewController.swift; sourceTree = "<group>"; };
+		B54C305A2529F9D3007B3604 /* CellCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellCollectionViewCell.swift; sourceTree = "<group>"; };
 		B550E32824EEF50600C42755 /* RealmService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmService.swift; sourceTree = "<group>"; };
 		B569877424FBDFEE009933D1 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		B5B69AF524CC85A600E9B552 /* VKApi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VKApi.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -102,6 +112,7 @@
 				B5EA886124E9872D002C13E0 /* Response.swift */,
 				B52354482513FAC800B7E86F /* NetworkServices.swift */,
 				B5F1BBC124FAAB9300097AC2 /* NetworkServices + Ext.swift */,
+				229B3142254A0FAA003FFFA8 /* PhotoService.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -122,6 +133,24 @@
 				33EC894FDC5A6ECC074BED0E /* Pods_VKApi.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B53E7244252BC59000CA5F08 /* UIControls */ = {
+			isa = PBXGroup;
+			children = (
+				B53E7245252BC5B600CA5F08 /* HeartControl.swift */,
+				22144AC2255736D300F86787 /* CommentsControl.swift */,
+			);
+			path = UIControls;
+			sourceTree = "<group>";
+		};
+		B54C30502529F95C007B3604 /* CollectionViewController */ = {
+			isa = PBXGroup;
+			children = (
+				B54C30512529F986007B3604 /* NewsCollectionViewController.swift */,
+				B54C305A2529F9D3007B3604 /* CellCollectionViewCell.swift */,
+			);
+			path = CollectionViewController;
 			sourceTree = "<group>";
 		};
 		B550E32724EEF4E000C42755 /* StorageManager */ = {
@@ -196,6 +225,7 @@
 		B5B69AF724CC85A600E9B552 /* VKApi */ = {
 			isa = PBXGroup;
 			children = (
+				B53E7244252BC59000CA5F08 /* UIControls */,
 				B5FC403E24D44FF400B56697 /* Main.storyboard */,
 				B5DAC13624CDE7D20081C6E2 /* Helpers */,
 				B550E32724EEF4E000C42755 /* StorageManager */,
@@ -311,6 +341,7 @@
 		B5FC403524D44C5900B56697 /* NewsModules */ = {
 			isa = PBXGroup;
 			children = (
+				B54C30502529F95C007B3604 /* CollectionViewController */,
 				B593E4042504BE98006B1753 /* Model */,
 				B5C0CE90250D265B00B8B59E /* Controllers */,
 			);
@@ -449,6 +480,8 @@
 				B5EA886224E9872D002C13E0 /* Response.swift in Sources */,
 				B5C51FBA2504F0D80028671B /* NewsFeedModel.swift in Sources */,
 				B53FB72D24CF5CDA0009977E /* Extension.swift in Sources */,
+				B54C305B2529F9D3007B3604 /* CellCollectionViewCell.swift in Sources */,
+				22144AC3255736D300F86787 /* CommentsControl.swift in Sources */,
 				B52EE8DC24E5C3BE00176EAA /* Session.swift in Sources */,
 				B5F1BBC224FAAB9300097AC2 /* NetworkServices + Ext.swift in Sources */,
 				B5B69AF924CC85A600E9B552 /* AppDelegate.swift in Sources */,
@@ -457,14 +490,17 @@
 				B512384F251544D700ACF939 /* AsyncOperation.swift in Sources */,
 				B5DAC14124CDE8F00081C6E2 /* FriendsDetailCollectionViewCell.swift in Sources */,
 				B523544C2514010C00B7E86F /* NetworkOperation.swift in Sources */,
+				B53E7246252BC5B600CA5F08 /* HeartControl.swift in Sources */,
 				B5DAC13F24CDE8DC0081C6E2 /* FriendsTableViewCell.swift in Sources */,
 				B5B69AFB24CC85A600E9B552 /* SceneDelegate.swift in Sources */,
+				229B3143254A0FAA003FFFA8 /* PhotoService.swift in Sources */,
 				B569877524FBDFEE009933D1 /* Photo.swift in Sources */,
 				B5DAC14624CDE96C0081C6E2 /* GroupesTableViewController.swift in Sources */,
 				B550E32924EEF50600C42755 /* RealmService.swift in Sources */,
 				B5EA886024E9745A002C13E0 /* Friend.swift in Sources */,
 				B5DAC13A24CDE8720081C6E2 /* FriendsDetailCollectionViewController.swift in Sources */,
 				B5FC403D24D44D9D00B56697 /* NewsViewController.swift in Sources */,
+				B54C30522529F986007B3604 /* NewsCollectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -15,21 +15,16 @@ class CellCollectionViewCell: UICollectionViewCell {
             avatarImageView.layer.cornerRadius = avatarImageView.bounds.width / 2
         }
     }  // Аватар автора новости
+    
+    @IBOutlet weak var heartControl: HeartControl!
+    @IBOutlet weak var commentsControl: CommentsControl!
+    
     @IBOutlet weak var titleNewsFeed: UILabel!        // Название автора новости
     @IBOutlet weak var publicationTime: UILabel!       // Последнее время онлайн
     @IBOutlet weak var newsTitleText: UILabel!        // Основной текст поста
     @IBOutlet weak var galleryImageView: UIImageView! // Фото новости
                                                       // Констрейнт высоты фото новости
     @IBOutlet weak var galleryImageViewHeightConstraint: NSLayoutConstraint!
-    
-    @IBOutlet weak var stackView: UIStackView!
-    let heartControl = HeartControl()
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        stackView.addSubview(heartControl)
-    }
     
     func configureCell(byData: NewsFeedModel,
                        networkService: NetworkService?,
@@ -62,6 +57,7 @@ class CellCollectionViewCell: UICollectionViewCell {
         galleryImageViewHeightConstraint.constant = imageHeight ?? 0
         
         heartControl.set(byData.likes.count)
+        commentsControl.set(byData.comments.count)
     }
     
 }

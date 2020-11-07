@@ -9,11 +9,17 @@
 import UIKit
 
 class HeartControl: UIControl {
-
-    private var likeCount = 0
-    var isLiked = false
     
-    private var imageLabel = UIImageView()
+    private var likeCount = 0
+    private var isLiked = false
+    
+    var imageLabel: UIImageView = {
+        let label = UIImageView()
+        label.tintColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        label.image = UIImage(systemName: "heart")
+        return label
+    }()
+    
     private var countLabel = UILabel()
     
     override init(frame: CGRect) {
@@ -25,9 +31,7 @@ class HeartControl: UIControl {
         super.init(coder: coder)
         setView()
     }
-    
-    
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -40,11 +44,26 @@ class HeartControl: UIControl {
         setView()
     }
     
-    func setView() {
-        imageLabel.tintColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
-        imageLabel.image = UIImage(systemName: "heart")
+    private func setView() {
+        
+        self.addTarget(self, action: #selector(tapToControl), for: .touchUpInside)
         
         setupLabels()
+    }
+    
+    @objc func tapToControl() {
+        isLiked.toggle()
+        if isLiked {
+            imageLabel.image = UIImage(systemName: "heart.fill")
+            imageLabel.tintColor = #colorLiteral(red: 0.7450980544, green: 0.1568627506, blue: 0.07450980693, alpha: 1)
+            likeCount += 1
+            setupLabels()
+        } else {
+            imageLabel.image = UIImage(systemName: "heart")
+            likeCount -= 1
+            imageLabel.tintColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+            setupLabels()
+        }
     }
     
     private func setupLabels() {
@@ -57,9 +76,8 @@ class HeartControl: UIControl {
         case 1_000..<1_000_000:
             countLabel.text = String("\(likeCount / 1000)" + "K")
         default:
-            countLabel.text = "?"
+            countLabel.text = "-"
         }
-        
     }
     
     private func setupConstraints() {
@@ -69,13 +87,14 @@ class HeartControl: UIControl {
         imageLabel.translatesAutoresizingMaskIntoConstraints = false
         countLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        imageLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true;
-        imageLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true;
-        imageLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true;
+        imageLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true;
+        imageLabel.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true;
+        imageLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true;
+        imageLabel.widthAnchor.constraint(equalToConstant: 30).isActive = true;
         
-        countLabel.leadingAnchor.constraint(equalTo: imageLabel.trailingAnchor, constant: 8).isActive = true;
-        countLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true;
-        countLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true;
-        countLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true;
+        countLabel.leadingAnchor.constraint(equalTo: imageLabel.trailingAnchor, constant: 0).isActive = true;
+        countLabel.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true;
+        countLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true;
+        countLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true;
     }
 }
