@@ -18,6 +18,8 @@ class CellCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var heartControl: HeartControl!
     @IBOutlet weak var commentsControl: CommentsControl!
+    @IBOutlet weak var repostControl: RepostControl!
+    @IBOutlet weak var viewsControl: ViewsControl!
     
     @IBOutlet weak var titleNewsFeed: UILabel!        // Название автора новости
     @IBOutlet weak var publicationTime: UILabel!       // Последнее время онлайн
@@ -58,6 +60,8 @@ class CellCollectionViewCell: UICollectionViewCell {
         
         heartControl.set(byData.likes.count)
         commentsControl.set(byData.comments.count)
+        repostControl.set(byData.reposts.count)
+        viewsControl.set(byData.views.count)
     }
     
 }

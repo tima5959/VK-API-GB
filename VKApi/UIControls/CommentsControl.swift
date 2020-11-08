@@ -14,7 +14,7 @@ class CommentsControl: UIControl {
     
     private let imageView: UIImageView = {
         let view = UIImageView()
-        view.tintColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        view.tintColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
         view.image = UIImage(systemName: "message")
         return view
     }()
@@ -47,7 +47,7 @@ class CommentsControl: UIControl {
     
     private func setupView() {
         self.addTarget(self, action: #selector(tapToControl), for: .touchUpInside)
-        countLabel.textColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        countLabel.textColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
         
         switch count {
         case 0..<1_000:

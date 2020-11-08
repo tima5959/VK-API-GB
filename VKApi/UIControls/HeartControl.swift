@@ -15,7 +15,7 @@ class HeartControl: UIControl {
     
     var imageLabel: UIImageView = {
         let label = UIImageView()
-        label.tintColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        label.tintColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
         label.image = UIImage(systemName: "heart")
         return label
     }()
@@ -61,14 +61,14 @@ class HeartControl: UIControl {
         } else {
             imageLabel.image = UIImage(systemName: "heart")
             likeCount -= 1
-            imageLabel.tintColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+            imageLabel.tintColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
             setupLabels()
         }
     }
     
     private func setupLabels() {
         
-        countLabel.textColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        countLabel.textColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
         
         switch likeCount {
         case 0..<1_000:

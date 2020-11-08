@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		22144AC3255736D300F86787 /* CommentsControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22144AC2255736D300F86787 /* CommentsControl.swift */; };
+		22943B2F2558914700361686 /* ViewsControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22943B2E2558914700361686 /* ViewsControl.swift */; };
+		22943B33255891BB00361686 /* RepostControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22943B32255891BB00361686 /* RepostControl.swift */; };
 		229B3143254A0FAA003FFFA8 /* PhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229B3142254A0FAA003FFFA8 /* PhotoService.swift */; };
 		9629370A82F66199F48424CD /* Pods_VKApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33EC894FDC5A6ECC074BED0E /* Pods_VKApi.framework */; };
 		B512384F251544D700ACF939 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512384E251544D700ACF939 /* AsyncOperation.swift */; };
@@ -45,6 +47,8 @@
 
 /* Begin PBXFileReference section */
 		22144AC2255736D300F86787 /* CommentsControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsControl.swift; sourceTree = "<group>"; };
+		22943B2E2558914700361686 /* ViewsControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewsControl.swift; sourceTree = "<group>"; };
+		22943B32255891BB00361686 /* RepostControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepostControl.swift; sourceTree = "<group>"; };
 		229B3142254A0FAA003FFFA8 /* PhotoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoService.swift; sourceTree = "<group>"; };
 		33EC894FDC5A6ECC074BED0E /* Pods_VKApi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VKApi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42E07992D5FB76B09D3A7511 /* Pods-VKApi.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKApi.release.xcconfig"; path = "Target Support Files/Pods-VKApi/Pods-VKApi.release.xcconfig"; sourceTree = "<group>"; };
@@ -140,6 +144,8 @@
 			children = (
 				B53E7245252BC5B600CA5F08 /* HeartControl.swift */,
 				22144AC2255736D300F86787 /* CommentsControl.swift */,
+				22943B32255891BB00361686 /* RepostControl.swift */,
+				22943B2E2558914700361686 /* ViewsControl.swift */,
 			);
 			path = UIControls;
 			sourceTree = "<group>";
@@ -479,6 +485,7 @@
 				B5B69AFD24CC85A600E9B552 /* ViewController.swift in Sources */,
 				B5EA886224E9872D002C13E0 /* Response.swift in Sources */,
 				B5C51FBA2504F0D80028671B /* NewsFeedModel.swift in Sources */,
+				22943B2F2558914700361686 /* ViewsControl.swift in Sources */,
 				B53FB72D24CF5CDA0009977E /* Extension.swift in Sources */,
 				B54C305B2529F9D3007B3604 /* CellCollectionViewCell.swift in Sources */,
 				22144AC3255736D300F86787 /* CommentsControl.swift in Sources */,
@@ -487,6 +494,7 @@
 				B5B69AF924CC85A600E9B552 /* AppDelegate.swift in Sources */,
 				B5DAC13824CDE83B0081C6E2 /* FriendsTableViewController.swift in Sources */,
 				B52354492513FAC800B7E86F /* NetworkServices.swift in Sources */,
+				22943B33255891BB00361686 /* RepostControl.swift in Sources */,
 				B512384F251544D700ACF939 /* AsyncOperation.swift in Sources */,
 				B5DAC14124CDE8F00081C6E2 /* FriendsDetailCollectionViewCell.swift in Sources */,
 				B523544C2514010C00B7E86F /* NetworkOperation.swift in Sources */,
