@@ -29,9 +29,15 @@ class FriendsTableViewController: UITableViewController {
     private var filteredFriends = [Friend]()
     private var realmResultFriend: Results<Friend>!
     
-    private var sortedFirstLetters: [String] = []
-    private var sortedFirstLettersAndFriends: [[Friend]] = [[]]
-//    private var sortedByTextFriends: [Friend] = []
+    private var sortedFirstLettersString: [String] = []
+//    private var sortedFirstLettersAndFriends: [[Friend]] = [[]]
+
+    private var groupedFriends = [Character: [Friend]]()
+    private var sortedFirstLetters: [Character] {
+        get {
+            groupedFriends.keys.sorted()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +45,18 @@ class FriendsTableViewController: UITableViewController {
         title = "Друзья"
         
         setNotificationToken()
+        
+        networkService.getLoadFriends { [weak self] friend in
+            self?.friends = friend
+            
+            self?.tableView.reloadData()
+            
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        }
+        
+        
         
         self.navigationItem.rightBarButtonItem = self.editButtonItem
         
@@ -67,60 +85,52 @@ class FriendsTableViewController: UITableViewController {
         setNotificationToken()
     }
     
-    private func sortingFriendsByName(_ friends: [Friend]) -> [Character: [Friend]] {
+    private func sortingFriendsByName(_ searchText: String?, _ friends: [Friend]) -> [Character: [Friend]] {
         let friend: [Friend]
-        friend = friends
         
-        let sortedFriend = Dictionary
-            .init(grouping: friend) { $0.firstName.lowercased().first ?? "#"}
-            .mapValues { $0.sorted { $0.firstName.lowercased() < $1.firstName.lowercased()
+        if let text = searchText, searchText != "" {
+            friend = friends.filter { $0.firstName.lowercased().contains(text) || $0.lastName.lowercased().contains(text) }
+        } else {
+            friend = friends
+        }
+        
+        let friendsDict = Dictionary.init(grouping: friend) {
+            $0.firstName.lowercased().first ?? "#"
+        }.mapValues {
+            $0.sorted {
+                $0.firstName.lowercased() < $1.firstName.lowercased()
             }
         }
-        return sortedFriend
+        return friendsDict
     }
-    
-    private func setFirstLetters(_ text: String? = nil) {
+
+    private func setFriends() {
         // Проверяю Realm<Result>
         guard let users = self.realmResultFriend else { return }
         // Фильтрую друзей по имени и проверяю на nil
         let filteredFriends = users.filter { !$0.firstName.isEmpty }
         // Добавляю в массив типа [Friend] отфильтрованных по имени друзей
-        self.friends = Array(filteredFriends)
+        friends = Array(filteredFriends)
         
-        if text == text {
-            self.filteredFriends = friends.filter { $0.firstName.contains(text ?? "#") }
-        } else {
-            // Передаю в функцию модели Friends массив отфильтрованных по имени друзей
-            // Чтобы получить первую букву их имени
-            let firstLetters = friends.map { $0.titleFirstLetter }
-            // Убираю повторяющиеся буквы
-            let uniqueFirstLetters = Array(Set(firstLetters))
-            // Сортирую буквы
-            sortedFirstLetters = uniqueFirstLetters.sorted()
-            // Добавляю в [[sections]] буквы
-            // Возвращаю [Friend] отфильрованный по этим буквам
-            // Возвращаю [Friend] отсортированный от А до Я || от A до Z
-            sortedFirstLettersAndFriends = sortedFirstLetters.map { firstLetter in
-                return friends.filter { $0.titleFirstLetter == firstLetter }.sorted { $0.firstName < $1.firstName }
-            }
-            
-        }
-        self.tableView.reloadData()
+        groupedFriends = sortingFriendsByName(nil, friends)
+        tableView.reloadData()
     }
     
     private func setNotificationToken() {
         realmResultFriend = try? storageManager.fetchByRealm(items: Friend.self)
-        setFirstLetters()
+        setFriends()
         notificationToken = realmResultFriend?.observe { changes in
             switch changes {
             case .initial(_):
                 self.storageManager.fetchFriends()
-                self.setFirstLetters()
+                self.setFriends()
+
             case .update(_, _, _, _):
                 self.storageManager.fetchFriends()
-                self.setFirstLetters()
+                self.setFriends()
             case .error(let error):
                 print(error.localizedDescription)
+                
             }
         }
         tableView.reloadData()
@@ -129,15 +139,22 @@ class FriendsTableViewController: UITableViewController {
     // MARK: - Navigation
     // При использовании сторибордов, необходимо подготовить переход (передача данных)
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard segue.identifier == "detailFriendsTableViewSegue" else { return }
-        guard let indexPath = tableView.indexPathForSelectedRow else { return }
-        
-        let model = sortedFirstLettersAndFriends[indexPath.section][indexPath.row]
-        let friendsDetailVC = segue.destination as! FriendsDetailCollectionViewController
-        friendsDetailVC.navigationController?.title = model.firstName + " " + model.lastName
-        friendsDetailVC.ownerID = model.id
-        friendsDetailVC.users.append(model)
-        
+        if segue.identifier == "detailFriendsTableViewSegue" {
+            if let indexPath = tableView.indexPathForSelectedRow {
+                let friendsDetailVC = segue.destination as! FriendsDetailCollectionViewController
+                let model = groupedFriends[sortedFirstLetters[indexPath.section]]
+                guard let user = model?[indexPath.row] else {
+                    return
+                }
+                
+                print(model!)
+                print(user)
+                
+                friendsDetailVC.navigationController?.title = user.firstName + " " + user.lastName
+                friendsDetailVC.ownerID = user.id
+                friendsDetailVC.users.append(user)
+            }
+        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -150,38 +167,26 @@ class FriendsTableViewController: UITableViewController {
 // MARK: - TableViewDataSource
 extension FriendsTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
-        if isFiltering {
-            return 1
-        }
-        
-        return sortedFirstLettersAndFriends.count
+
+        return sortedFirstLetters.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isFiltering {
-            filteredFriends.count
-        }
-        
-        return sortedFirstLettersAndFriends[section].count
+
+        return groupedFriends[sortedFirstLetters[section]]?.count ?? 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? FriendsTableViewCell else { return UITableViewCell() }
+        let key = sortedFirstLetters[indexPath.section]
+        let friends = groupedFriends[key]
         
-        let friend: Friend			    	
-        
-        if isFiltering {
-            friend = filteredFriends[indexPath.row]
-        } else {
-            friend = sortedFirstLettersAndFriends[indexPath.section][indexPath.row]
-        }
+        guard let friend = friends?[indexPath.row] else { return cell }
         
         cell.nameLabel.text = friend.firstName + " " + friend.lastName
         fetchAvatar(friend, cell)
         
         return cell
-        
-        
 //        networkService.fetchAndCachedPhoto(
 //            from: model.avatarURL) { image in
 //            cell.avatarImageView.image = image
@@ -206,18 +211,11 @@ extension FriendsTableViewController {
 extension FriendsTableViewController {
     // MARK: - Sections
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if isFiltering {
-            return ""
-        }
-        
-        return sortedFirstLetters[section]
+        return sortedFirstLetters[section].uppercased()
     }
     
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        if isFiltering {
-            return nil
-        }
-        return sortedFirstLetters
+        return String(sortedFirstLetters).map { String($0.uppercased()) }
     }
 }
 
@@ -241,19 +239,22 @@ extension FriendsTableViewController: UISearchResultsUpdating, UISearchBarDelega
     }
     
     func filterContentFor(_ searchText: String) {
-        filteredFriends = friends.filter { friends -> Bool in
-            return friends
-                .firstName
-                .lowercased()
-                .contains(searchText.lowercased())
-        }
+//        filteredFriends = friends.filter { friends -> Bool in
+//            return friends
+//                .firstName
+//                .lowercased()
+//                .contains(searchText.lowercased())
+//        }
+        
+        groupedFriends = sortingFriendsByName(searchText, friends)
+        
         tableView.reloadData()
     }
     
     // Теперь всякий раз, когда пользователь добавляет или удаляет текст в строке поиска, UISearchController будет информировать класс FriendsTableViewController об изменении посредством вызова updateSearchResults(for:), который, в свою очередь, вызывает filterContentFor(_ searchText:).
     func updateSearchResults(for searchController: UISearchController) {
         let searchBar = searchController.searchBar
-        filterContentFor(searchBar.text!)
+        filterContentFor(searchBar.text!.lowercased())
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

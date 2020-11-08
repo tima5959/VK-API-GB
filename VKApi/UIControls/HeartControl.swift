@@ -90,7 +90,7 @@ class HeartControl: UIControl {
         imageLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true;
         imageLabel.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true;
         imageLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true;
-        imageLabel.widthAnchor.constraint(equalToConstant: 30).isActive = true;
+        imageLabel.widthAnchor.constraint(equalToConstant: 25).isActive = true;
         
         countLabel.leadingAnchor.constraint(equalTo: imageLabel.trailingAnchor, constant: 0).isActive = true;
         countLabel.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true;
