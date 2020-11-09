@@ -1,12 +1,12 @@
 PODS:
-  - Kingfisher (5.15.6):
-    - Kingfisher/Core (= 5.15.6)
-  - Kingfisher/Core (5.15.6)
-  - Realm (10.1.0):
-    - Realm/Headers (= 10.1.0)
-  - Realm/Headers (10.1.0)
-  - RealmSwift (10.1.0):
-    - Realm (= 10.1.0)
+  - Kingfisher (5.15.7):
+    - Kingfisher/Core (= 5.15.7)
+  - Kingfisher/Core (5.15.7)
+  - Realm (10.1.2):
+    - Realm/Headers (= 10.1.2)
+  - Realm/Headers (10.1.2)
+  - RealmSwift (10.1.2):
+    - Realm (= 10.1.2)
 
 DEPENDENCIES:
   - Kingfisher
@@ -19,9 +19,9 @@ SPEC REPOS:
     - RealmSwift
 
 SPEC CHECKSUMS:
-  Kingfisher: b3554e7bf6106115b44e8795300bad580ef2fdc7
-  Realm: 100df88a0faf5328f48477427e4b3e1a1598bae3
-  RealmSwift: 725d1c10df64964b04aaa0058c19ce0f4b4c3f5a
+  Kingfisher: 6e1a13523fcb1c86924ce53affe4ac957e544d59
+  Realm: 031fdd4be7094d01b43af1a5e49766ab644bb800
+  RealmSwift: 43cf2e114baa9d17d34eb81e7d0def31f21cd444
 
 PODFILE CHECKSUM: 7523ed7747406cf3e5f72cba7abbdfd61ece2ab5
 

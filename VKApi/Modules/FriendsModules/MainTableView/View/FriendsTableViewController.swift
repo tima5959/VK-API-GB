@@ -29,7 +29,7 @@ class FriendsTableViewController: UITableViewController {
     private var filteredFriends = [Friend]()
     private var realmResultFriend: Results<Friend>!
     
-    private var sortedFirstLettersString: [String] = []
+//    private var sortedFirstLettersString: [String] = []
 //    private var sortedFirstLettersAndFriends: [[Friend]] = [[]]
 
     private var groupedFriends = [Character: [Friend]]()
@@ -45,18 +45,6 @@ class FriendsTableViewController: UITableViewController {
         title = "Друзья"
         
         setNotificationToken()
-        
-        networkService.getLoadFriends { [weak self] friend in
-            self?.friends = friend
-            
-            self?.tableView.reloadData()
-            
-            DispatchQueue.main.async {
-                self?.tableView.reloadData()
-            }
-        }
-        
-        
         
         self.navigationItem.rightBarButtonItem = self.editButtonItem
         
@@ -85,15 +73,20 @@ class FriendsTableViewController: UITableViewController {
         setNotificationToken()
     }
     
-    private func sortingFriendsByName(_ searchText: String?, _ friends: [Friend]) -> [Character: [Friend]] {
+    private func sortingFriendsByName(_ searchText: String?,
+                                      _ friends: [Friend]) -> [Character: [Friend]] {
         let friend: [Friend]
-        
+        // Проверяю на нил приходящий текст
+        // И если текст имеется то фильтрую массив друзей по имени которое содержит приходящий текст
         if let text = searchText, searchText != "" {
             friend = friends.filter { $0.firstName.lowercased().contains(text) || $0.lastName.lowercased().contains(text) }
         } else {
             friend = friends
         }
         
+        // Перевожу массив друзей в словарь где ключ = Первая буква имен, значение = друзья по именем начинающимся на эту букву
+        // За это отвечает метод словара grouping
+        // .mapValues сортирует имена внутри групп от меньшего к большему
         let friendsDict = Dictionary.init(grouping: friend) {
             $0.firstName.lowercased().first ?? "#"
         }.mapValues {
@@ -124,7 +117,6 @@ class FriendsTableViewController: UITableViewController {
             case .initial(_):
                 self.storageManager.fetchFriends()
                 self.setFriends()
-
             case .update(_, _, _, _):
                 self.storageManager.fetchFriends()
                 self.setFriends()
@@ -142,23 +134,25 @@ class FriendsTableViewController: UITableViewController {
         if segue.identifier == "detailFriendsTableViewSegue" {
             if let indexPath = tableView.indexPathForSelectedRow {
                 let friendsDetailVC = segue.destination as! FriendsDetailCollectionViewController
+                // Здесь нам нужно понять на какого друга нажал пользователь
+                // Для этого мы вычисляем секцию ячейка который была нажата
+                // Так как за секции отвечают ключи словаря друзей, то мы обращаемся к словарю groupedFriends а затем берем его ключи groupedFriends[sortedFirstLetters] и получаем индекс нажатой секции groupedFriends[sortedFirstLetters[indexPath.section]]
                 let model = groupedFriends[sortedFirstLetters[indexPath.section]]
-                guard let user = model?[indexPath.row] else {
-                    return
-                }
-                
-                print(model!)
-                print(user)
+                // Теперь мы можем узнать на какого друга нажал пользователь
+                // Для этого у полученной секции model мы спрашиваем индекс нажатой ячейки model?[indexPath.row]
+                guard let user = model?[indexPath.row] else { return }
                 
                 friendsDetailVC.navigationController?.title = user.firstName + " " + user.lastName
+                // Передаю id друга для получения всех его фотографий
                 friendsDetailVC.ownerID = user.id
+                // Добавляю в массив друзей выделенного пользователем друга
                 friendsDetailVC.users.append(user)
             }
         }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let _ = tableView.indexPathForSelectedRow {
+        if (tableView.indexPathForSelectedRow != nil) {
             performSegue(withIdentifier: "detailFriendsTableViewSegue", sender: nil)
         }
     }
@@ -172,13 +166,16 @@ extension FriendsTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
+        // Беру словарь и получаю индекс выбранного ключа и получаю количество значений в этом словаре
+        // То есть получаю индекс секции и количество друзей в этой секции
         return groupedFriends[sortedFirstLetters[section]]?.count ?? 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? FriendsTableViewCell else { return UITableViewCell() }
+        // Получаю ключ словаря по номеру секции
         let key = sortedFirstLetters[indexPath.section]
+        // Получаю значения по ключу полученому выше
         let friends = groupedFriends[key]
         
         guard let friend = friends?[indexPath.row] else { return cell }

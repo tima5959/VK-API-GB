@@ -230,8 +230,10 @@ final class NetworkService {
     func fetchAndCachedPhoto(from urlString: String,
                              completionHandler: @escaping (UIImage?) -> Void,
                              completionError: @escaping (Error?) -> Void) {
-        
+        // Перевожу адрес фотографии в тип NSString
         let cacheKey = NSString(string: urlString)
+        // Проверяю наличие данного адреса среди ключей словаря imagesCache = NSCache<NSString, UIImage>()
+        // Если ключ имеется значит фотография закеширована
         if let image = imagesCache.object(forKey: cacheKey) {
             DispatchQueue.main.async {
                 completionHandler(image)
@@ -239,6 +241,7 @@ final class NetworkService {
             return
         }
         
+        // Проверяю валидность адреса приводя его к типу URL
         guard let url = URL(string: urlString) else {
             DispatchQueue.main.async {
                 completionError(nil)
@@ -258,6 +261,7 @@ final class NetworkService {
                 return
             }
             
+            // Добавляю адрес как ключ и фотографию как значение в кеш
             self.imagesCache.setObject(image, forKey: cacheKey)
             
             DispatchQueue.main.async {
