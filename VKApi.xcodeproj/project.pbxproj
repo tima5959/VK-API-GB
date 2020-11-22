@@ -10,6 +10,7 @@
 		22144AC3255736D300F86787 /* CommentsControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22144AC2255736D300F86787 /* CommentsControl.swift */; };
 		22943B2F2558914700361686 /* ViewsControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22943B2E2558914700361686 /* ViewsControl.swift */; };
 		22943B33255891BB00361686 /* RepostControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22943B32255891BB00361686 /* RepostControl.swift */; };
+		229787BC256B141400C89201 /* Readme.md in Resources */ = {isa = PBXBuildFile; fileRef = 229787BB256B141400C89201 /* Readme.md */; };
 		229B3143254A0FAA003FFFA8 /* PhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229B3142254A0FAA003FFFA8 /* PhotoService.swift */; };
 		9629370A82F66199F48424CD /* Pods_VKApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33EC894FDC5A6ECC074BED0E /* Pods_VKApi.framework */; };
 		B512384F251544D700ACF939 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512384E251544D700ACF939 /* AsyncOperation.swift */; };
@@ -49,6 +50,7 @@
 		22144AC2255736D300F86787 /* CommentsControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsControl.swift; sourceTree = "<group>"; };
 		22943B2E2558914700361686 /* ViewsControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewsControl.swift; sourceTree = "<group>"; };
 		22943B32255891BB00361686 /* RepostControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepostControl.swift; sourceTree = "<group>"; };
+		229787BB256B141400C89201 /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 		229B3142254A0FAA003FFFA8 /* PhotoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoService.swift; sourceTree = "<group>"; };
 		33EC894FDC5A6ECC074BED0E /* Pods_VKApi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VKApi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42E07992D5FB76B09D3A7511 /* Pods-VKApi.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKApi.release.xcconfig"; path = "Target Support Files/Pods-VKApi/Pods-VKApi.release.xcconfig"; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 		B5B69AEC24CC85A600E9B552 = {
 			isa = PBXGroup;
 			children = (
+				229787BB256B141400C89201 /* Readme.md */,
 				B5B69AF724CC85A600E9B552 /* VKApi */,
 				B5B69AF624CC85A600E9B552 /* Products */,
 				B52EE8E224E5E29E00176EAA /* Frameworks */,
@@ -425,6 +428,7 @@
 			files = (
 				B5FC403F24D44FF400B56697 /* Main.storyboard in Resources */,
 				B5B69B0524CC85A700E9B552 /* LaunchScreen.storyboard in Resources */,
+				229787BC256B141400C89201 /* Readme.md in Resources */,
 				B5B69B0224CC85A700E9B552 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
