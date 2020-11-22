@@ -219,11 +219,6 @@ extension FriendsTableViewController {
 // MARK: - UISearchResultsUpdating, UISearchBarDelegate
 extension FriendsTableViewController: UISearchResultsUpdating, UISearchBarDelegate {
     
-    // isSearchBarEmpty возвращает true, если текст, введенный в строке поиска, пуст; в противном случае возвращается false.
-    var isSearchBarEmpty: Bool {
-        return searchController.searchBar.text?.isEmpty ?? true
-    }
-    
     // Вычисляемое свойство, определяющее, фильтруете ли вы в настоящее время результаты или нет
     var isFiltering: Bool {
         return searchController.isActive && !searchBarIsEmpty

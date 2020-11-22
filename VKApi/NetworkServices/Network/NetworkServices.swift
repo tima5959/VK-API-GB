@@ -55,7 +55,9 @@ final class NetworkService {
             .init(name: "access_token", value: Session.shared.token),
             .init(name: "v", value: version)
         ]
-        guard let url = urlComponents.url else { preconditionFailure("loadFriends network methods is failure") }
+        guard let url = urlComponents.url else {
+            preconditionFailure("loadFriends network methods is failure")
+        }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         session.dataTask(with: request) { data, response, error in
@@ -64,7 +66,10 @@ final class NetworkService {
                 return
             }
             guard let data = data,
-                  let friendsModelData = try? JSONDecoder().decode(Response<Friend>.self, from: data).response.items else { return }
+                  let friendsModelData = try? JSONDecoder()
+                    .decode(Response<Friend>.self, from: data)
+                    .response
+                    .items else { return }
             DispatchQueue.main.async {
                 handler(friendsModelData)
             }
@@ -94,7 +99,10 @@ final class NetworkService {
             }
             
             guard let data = data,
-                  let groups = try? JSONDecoder().decode(Response<Groups>.self, from: data).response.items else { return }
+                  let groups = try? JSONDecoder()
+                    .decode(Response<Groups>.self, from: data)
+                    .response
+                    .items else { return }
             DispatchQueue.main.async {
                 handler(groups)
             }

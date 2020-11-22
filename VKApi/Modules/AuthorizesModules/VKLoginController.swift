@@ -22,6 +22,7 @@ class VKLoginController: UIViewController {
     
         webView.load(NetworkService.shared.getAuthorized())
     }
+    
 }
 
 extension VKLoginController: WKNavigationDelegate {
