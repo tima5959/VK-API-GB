@@ -36,6 +36,17 @@ class NewsCollectionViewController: UICollectionViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         operationsMethods()
+        
+        networkService.getNews({ [weak self] news in
+            self?.model = news
+            DispatchQueue.main.async {
+                self?.collectionView.reloadData()
+            }
+        }) { [unowned self] _ in
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
     }
     
     private func operationsMethods() {
@@ -50,6 +61,8 @@ class NewsCollectionViewController: UICollectionViewController {
         reloadDataOperation.addDependency(parseCommunitiesOperation)
         operationQ.addOperation(reloadDataOperation)
     }
+    
+    
 }
 
 // MARK: UICollectionViewDataSource
