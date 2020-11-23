@@ -566,46 +566,33 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="105"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="3sC-00-QnO">
-                                            <rect key="frame" x="24" y="19" width="270.5" height="67"/>
-                                            <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="5bI-F3-6CR">
-                                                    <rect key="frame" x="0.0" y="1" width="75" height="64.5"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <color key="tintColor" systemColor="systemBlueColor"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="76" id="Nec-xw-feQ"/>
-                                                        <constraint firstAttribute="width" constant="75" id="XQT-Ka-UBL"/>
-                                                    </constraints>
-                                                </imageView>
-                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="KZz-dt-7IV">
-                                                    <rect key="frame" x="80" y="0.0" width="190.5" height="43.5"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Имя Фамилия Отчество" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t08-tz-5ih">
-                                                            <rect key="frame" x="0.0" y="0.0" width="190.5" height="20.5"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Возраст" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mhZ-fv-iY6">
-                                                            <rect key="frame" x="0.0" y="25.5" width="190.5" height="18"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                </stackView>
-                                            </subviews>
-                                        </stackView>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="5bI-F3-6CR">
+                                            <rect key="frame" x="24" y="20" width="75" height="64.5"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="tintColor" systemColor="systemBlueColor"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="76" id="Nec-xw-feQ"/>
+                                                <constraint firstAttribute="width" constant="75" id="XQT-Ka-UBL"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Имя Фамилия Отчество" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t08-tz-5ih">
+                                            <rect key="frame" x="107" y="30" width="260" height="45"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="bottomMargin" secondItem="3sC-00-QnO" secondAttribute="bottom" constant="8" id="acS-Bw-Y7k"/>
-                                        <constraint firstItem="3sC-00-QnO" firstAttribute="leading" secondItem="G3m-tg-DXC" secondAttribute="leadingMargin" constant="8" id="kJ0-1t-EFx"/>
-                                        <constraint firstItem="3sC-00-QnO" firstAttribute="top" secondItem="G3m-tg-DXC" secondAttribute="topMargin" constant="8" id="u2P-mQ-pMK"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="5bI-F3-6CR" secondAttribute="bottom" constant="8" id="GaR-oX-YGH"/>
+                                        <constraint firstItem="t08-tz-5ih" firstAttribute="top" secondItem="G3m-tg-DXC" secondAttribute="top" constant="30" id="Ive-Wf-hjT"/>
+                                        <constraint firstItem="5bI-F3-6CR" firstAttribute="top" secondItem="G3m-tg-DXC" secondAttribute="topMargin" constant="8" id="b9S-Zu-WN6"/>
+                                        <constraint firstItem="5bI-F3-6CR" firstAttribute="leading" secondItem="G3m-tg-DXC" secondAttribute="leadingMargin" constant="8" id="ijV-PB-Ob4"/>
+                                        <constraint firstAttribute="bottom" secondItem="t08-tz-5ih" secondAttribute="bottom" constant="30" id="ipm-14-SBV"/>
+                                        <constraint firstAttribute="trailing" secondItem="t08-tz-5ih" secondAttribute="trailing" constant="8" id="kcX-7Z-bnS"/>
+                                        <constraint firstItem="t08-tz-5ih" firstAttribute="leading" secondItem="5bI-F3-6CR" secondAttribute="trailing" constant="8" id="z47-s5-hZM"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="ageLabel" destination="mhZ-fv-iY6" id="mvW-Mv-IDe"/>
                                     <outlet property="avatarImageView" destination="5bI-F3-6CR" id="Kw3-Je-V3W"/>
                                     <outlet property="nameLabel" destination="t08-tz-5ih" id="eab-KF-xO2"/>
                                     <segue destination="Gis-Zy-hBy" kind="show" identifier="detailFriendsTableViewSegue" trigger="accessoryAction" id="C4T-Uw-Sz1"/>
